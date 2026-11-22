@@ -2,7 +2,7 @@
 [build]
   publish = "."
   # Stamps a fresh build id into sw.js on every deploy — that's what makes visitors
-  # get the "✨ new update — REFRESH" message.
+  # get the "new update — REFRESH" message.
   command = "sed -i \"s/__BUILD__/${COMMIT_REF:-manual-$(date +%s)}/\" sw.js && echo 'PIXELTAPE ready'"
 
 # always check sw.js for a new version (never keep an old copy)

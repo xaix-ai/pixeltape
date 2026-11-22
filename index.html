@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>pixeltape</title>
+  <title>PIXELTAPE — Your Little Mixtape</title>
   <meta name="description" content="A little pixel cassette player for the songs that feel like home. Make mixtapes from your own music.">
   <!-- installable app (PWA) -->
   <link rel="manifest" href="manifest.webmanifest">
@@ -60,16 +60,24 @@
     <span class="pixel-star star-3"></span><span class="pixel-star star-4"></span>
   </div>
 
+  <!-- Netlify reads this hidden form when the site deploys, so notes sent from the app land in Netlify → Forms -->
+  <form name="feedback" data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <input name="form-name" value="feedback"><input name="type"><input name="name"><textarea name="message"></textarea><input name="version"><input name="bot-field">
+  </form>
+
   <main class="page-container">
     <header class="site-header">
       <div class="brand">
         <div class="logo"><span class="logo-icon">♫</span> PIXELTAPE</div>
         <div class="header-tag">YOUR LITTLE MUSIC CORNER</div>
-        <button class="get-app" id="getAppButton" type="button">GET THE APP</button>
+        <div class="header-buttons">
+          <button class="get-app" id="getAppButton" type="button">⬇ GET THE APP</button>
+          <button class="get-app note-button" id="noteButton" type="button">✎ SEND A NOTE</button>
+        </div>
       </div>
       <div class="intro">
-        <p class="eyebrow">MADE WITH LUUUV &amp; PIXELS</p>
-        <h1>Your music. Your mixtape.</h1>
+        <p class="eyebrow">✦ MADE WITH LOVE &amp; PIXELS ✦</p>
+        <h1>Your music. Your memories. Your mixtape.</h1>
         <p class="intro-desc">A little cassette player for the songs that feel like home.</p>
       </div>
     </header>
@@ -217,8 +225,8 @@
     </section>
 
     <footer class="site-footer">
-      <p>xaixai ^^</p>
-      <p>MADE WITH LUUUV · PIXELTAPE © 2026 · <span id="appVersion"></span></p>
+      <p>SPACE = play / pause · ← → = seek</p>
+      <p>MADE WITH LOVE · PIXELTAPE © 2026 · <span id="appVersion"></span></p>
     </footer>
   </main>
 

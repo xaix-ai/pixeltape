@@ -32,7 +32,7 @@ Drag the cassette anywhere; ⤢ brings the full player back. The music keeps pla
 
 ## Website (Netlify)
 Connect the GitHub repo in Netlify. `netlify.toml` already sets everything (publish folder, update stamp, hiding desktop files).
-Every `git push` redeploys. Visitors who already have PIXELTAPE open get a **✨ new update is ready → REFRESH** message.
+Every `git push` redeploys. Visitors who already have PIXELTAPE open get a **new update is ready → REFRESH** message.
 It works offline and installs like an app (phone: Add to Home Screen; computer: install icon in the address bar).
 
 ## Desktop app release (.dmg / .exe for everyone)

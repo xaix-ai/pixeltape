@@ -7,7 +7,8 @@
 const CONFIG = {
   version: "0.6.0",        // shown in the footer; keep it the same as "version" in package.json
   analyticsToken: "6a7eec2c81b446f6b2f14659655d0826",      // Cloudflare Web Analytics token — leave "" to turn analytics off
-  githubRepo: "xaix-ai/pixeltape"           // "your-username/pixeltape" — powers the Mac / Windows download buttons
+  githubRepo: "xaix-ai/pixeltape",          // "your-username/pixeltape" — powers the Mac / Windows download buttons
+  siteUrl: "https://pixeltape.netlify.app/" // the live website — the desktop app sends notes here
 };
 /* ============================================================= */
 
@@ -1719,3 +1720,174 @@ setupAnalytics();
   if (playlist.length) loadTrack(0, { animate: false });
   else showBlankTape();
 })();
+
+/* ---------- notes: feedback, suggestions, hellos ----------
+   A note is written on a tape and dropped onto a pile. The message goes to Netlify Forms
+   (only the PIXELTAPE maker reads it: Netlify → your project → Forms). The pile itself
+   lives on this device, so each person sees the tapes they sent stacking up. */
+const NOTES_KEY = "pixeltape:notes";
+const NOTE_TYPES = ["FEEDBACK", "SUGGESTION", "BUG", "HELLO"];
+const loadNotes = () => { try { return JSON.parse(localStorage.getItem(NOTES_KEY)) || []; } catch { return []; } };
+const storeNotes = notes => { try { localStorage.setItem(NOTES_KEY, JSON.stringify(notes)); } catch { /* storage full: the note was still sent */ } };
+const noteDate = time => new Date(time).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+
+async function sendNote({ type, name, message }) {
+  const body = new URLSearchParams({ "form-name": "feedback", type, name, message, version: CONFIG.version, "bot-field": "" });
+  if (isWeb && !isLocalhost) {
+    const response = await fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  } else if (window.pixeltapeDesktop) {
+    // the desktop app isn't on the website, so it posts straight to the live site
+    await fetch(CONFIG.siteUrl, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body });
+  } else {
+    throw new Error("local");
+  }
+}
+
+function buildNotePile(notes, onOpen, dropId) {
+  const pile = document.createElement("div");
+  pile.className = "note-pile";
+  if (!notes.length) {
+    const empty = document.createElement("p");
+    empty.className = "note-empty";
+    empty.textContent = "No notes yet. The tapes you send will stack up here.";
+    pile.append(empty);
+    return pile;
+  }
+  notes.forEach(note => { // oldest first in the DOM; the pile is drawn bottom-up, so the newest sits on top
+    const spine = document.createElement("button");
+    spine.type = "button";
+    spine.className = `note-spine${note.id === dropId ? " drop-in" : ""}`;
+    spine.dataset.shell = designOf(note.shell);
+    spine.style.setProperty("--tilt", `${note.tilt}deg`);
+    spine.style.setProperty("--shift", `${note.shift}px`);
+    spine.setAttribute("aria-label", `Open your ${note.type.toLowerCase()} note from ${noteDate(note.time)}`);
+    const label = document.createElement("span");
+    label.className = "note-spine-label";
+    const kind = document.createElement("b");
+    kind.textContent = note.type;
+    const preview = document.createElement("span");
+    preview.className = "note-spine-text";
+    preview.textContent = note.message;
+    const date = document.createElement("i");
+    date.textContent = noteDate(note.time);
+    label.append(kind, preview, date);
+    spine.append(label);
+    spine.addEventListener("click", () => onOpen(note));
+    pile.append(spine);
+  });
+  return pile;
+}
+
+function openNotesDialog(dropId) {
+  const notes = loadNotes();
+  let type = "FEEDBACK", nameInput, messageInput, sendButton;
+
+  const send = async () => {
+    const message = messageInput.value.trim();
+    if (message.length < 2) { showToast("Write something first"); messageInput.focus(); return; }
+    sendButton.disabled = true;
+    sendButton.textContent = "SENDING…";
+    try {
+      await sendNote({ type, name: nameInput.value.trim(), message });
+    } catch (error) {
+      sendButton.disabled = false;
+      sendButton.textContent = "SEND";
+      showToast(error.message === "local"
+        ? "Notes only send from the live site (pixeltape.netlify.app)"
+        : "Couldn't send your note. Check your internet and try again");
+      return;
+    }
+    const note = {
+      id: Date.now().toString(36), time: Date.now(), type, name: nameInput.value.trim(), message,
+      shell: document.body.dataset.shell, tilt: +(Math.random() * 4 - 2).toFixed(1), shift: Math.round(Math.random() * 16 - 8)
+    };
+    storeNotes([...loadNotes(), note]);
+    openNotesDialog(note.id);
+    showToast("Note sent. Thank you for writing!");
+  };
+
+  openModal("NOTES FOR PIXELTAPE", body => {
+    const intro = document.createElement("p");
+    intro.className = "modal-text";
+    intro.textContent = "Feedback, a suggestion, a bug, or just a hello? Write it on a tape and drop it in. Only the PIXELTAPE maker reads these.";
+
+    const pileTitle = document.createElement("div");
+    pileTitle.className = "modal-field";
+    pileTitle.textContent = `YOUR PILE (${notes.length})`;
+    const pile = buildNotePile(notes, openNote, dropId);
+
+    const typeField = document.createElement("div");
+    typeField.className = "modal-field";
+    typeField.append("WHAT IS IT?");
+    const chips = document.createElement("div");
+    chips.className = "note-types";
+    NOTE_TYPES.forEach(t => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "filter-chip";
+      chip.textContent = t;
+      chip.setAttribute("aria-pressed", String(t === type));
+      chip.addEventListener("click", () => {
+        type = t;
+        chips.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b === chip)));
+      });
+      chips.append(chip);
+    });
+    typeField.append(chips);
+
+    const nameField = document.createElement("label");
+    nameField.className = "modal-field";
+    nameField.append("YOUR NAME (OPTIONAL)");
+    nameInput = document.createElement("input");
+    nameInput.maxLength = 40;
+    nameInput.placeholder = "anonymous";
+    nameField.append(nameInput);
+
+    const messageField = document.createElement("label");
+    messageField.className = "modal-field";
+    const counter = document.createElement("span");
+    counter.className = "note-counter";
+    messageField.append("YOUR NOTE ", counter);
+    messageInput = document.createElement("textarea");
+    messageInput.className = "note-paper";
+    messageInput.maxLength = 1000;
+    messageInput.rows = 4;
+    messageInput.placeholder = "dear pixeltape…";
+    const count = () => { counter.textContent = `${messageInput.value.length}/1000`; };
+    messageInput.addEventListener("input", count);
+    count();
+    messageField.append(messageInput);
+
+    body.append(intro, pileTitle, pile, typeField, nameField, messageField);
+  }, [
+    { label: "SEND", onClick: send },
+    { label: "CLOSE", soft: true, onClick: closeModal }
+  ]);
+  sendButton = modalActions.firstElementChild;
+  if (dropId) modalBody.querySelector(".note-pile")?.scrollIntoView({ block: "nearest" });
+  else messageInput.focus();
+
+  function openNote(note) {
+    openModal(`${note.type} · ${noteDate(note.time)}`, body => {
+      const card = document.createElement("div");
+      card.className = "note-open";
+      card.dataset.shell = designOf(note.shell);
+      const head = document.createElement("div");
+      head.className = "note-open-head";
+      head.textContent = `FROM: ${note.name || "anonymous"}`;
+      const paper = document.createElement("p");
+      paper.className = "note-open-paper";
+      paper.textContent = note.message;
+      const band = document.createElement("div");
+      band.className = "note-open-band";
+      band.textContent = `${note.type} · SENT ${noteDate(note.time).toUpperCase()}`;
+      card.append(head, paper, band);
+      body.append(card);
+    }, [
+      { label: "← BACK TO THE PILE", onClick: () => openNotesDialog() },
+      { label: "CLOSE", soft: true, onClick: closeModal }
+    ]);
+  }
+}
+$("noteButton").addEventListener("click", () => openNotesDialog());
