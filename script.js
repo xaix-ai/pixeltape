@@ -1644,7 +1644,7 @@ function openGetAppDialog() {
         const row = document.createElement("div");
         row.className = "getapp-downloads";
         const order = device === "windows" ? ["windows", "mac"] : ["mac", "windows"];
-        order.forEach((os, i) => row.append(link(os === "mac" ? "⬇ DOWNLOAD FOR MAC" : "⬇ DOWNLOAD FOR WINDOWS", downloads[os], i === 0)));
+        order.forEach((os, i) => row.append(link(os === "mac" ? "DOWNLOAD FOR MAC" : "DOWNLOAD FOR WINDOWS", downloads[os], i === 0)));
         box.append(row, para(device === "windows"
           ? "First time it opens, Windows may say “Windows protected your PC”: click More info → Run anyway."
           : "First time it opens, your Mac may block it: go to System Settings → Privacy & Security → Open Anyway."));
