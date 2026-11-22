@@ -1,6 +1,6 @@
 {
   "name": "pixeltape",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "A little pixel cassette player for the songs that feel like home.",
   "main": "desktop/main.js",
   "author": "PIXELTAPE",

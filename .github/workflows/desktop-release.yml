@@ -1,7 +1,8 @@
 # Builds the Mac and Windows apps on GitHub's computers and puts them in a GitHub Release.
 # Press "Run workflow" on the Actions tab (or push a version tag like v0.6.0).
-# 1) makes a draft release for the version in package.json, 2) builds both apps into it,
-# 3) publishes the release, so the website's download buttons pick it up.
+# 1) makes a draft release for the version in package.json, 2) builds both apps and uploads
+# them to it, 3) publishes the release, so the website's download buttons pick it up.
+# For a new desktop version: change "version" in package.json, push, then Run workflow.
 name: Desktop apps
 
 on:
@@ -50,11 +51,21 @@ jobs:
         with:
           node-version: 22
       - run: npm install
-      - name: Build and upload
-        run: npx electron-builder ${{ matrix.target }} --publish always
+      - name: Build
+        run: npx electron-builder ${{ matrix.target }} --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"   # no paid code-signing certificate (yet)
+      - name: Upload to the release
+        shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CSC_IDENTITY_AUTO_DISCOVERY: "false"   # no paid code-signing certificate (yet)
+          TAG: ${{ needs.release.outputs.tag }}
+        run: |
+          shopt -s nullglob
+          files=(dist/PIXELTAPE-*.dmg dist/PIXELTAPE-*.exe)
+          echo "Uploading: ${files[*]}"
+          [ ${#files[@]} -gt 0 ] || { echo "No app file was built"; exit 1; }
+          gh release upload "$TAG" "${files[@]}" --repo "$GITHUB_REPOSITORY" --clobber
 
   publish:
     needs: [release, build]
