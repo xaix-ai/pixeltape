@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.DS_Store
+music/*.mp3
+music/*.m4a
+music/*.wav
+music/*.ogg
+music/*.flac
+music/*.aac

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PIXELTAPE — Your Little Mixtape</title>
+  <meta name="description" content="A little pixel cassette player for the songs that feel like home. Make mixtapes from your own music.">
+  <!-- installable app (PWA) -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#e8558f">
+  <link rel="icon" type="image/png" href="icons/favicon-64.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PIXELTAPE">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <!-- link preview when shared -->
+  <meta property="og:title" content="PIXELTAPE — Your Little Mixtape">
+  <meta property="og:description" content="A little pixel cassette player for the songs that feel like home.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-shell="bubblegum">
+  <div id="loader" class="loader" role="status" aria-label="Loading PIXELTAPE">
+    <script>try{var s=JSON.parse(localStorage.getItem("pixeltape:v1")||"{}").shell;if(s)document.body.dataset.shell=s}catch(e){}</script>
+    <div class="loader-stage">
+      <img class="loader-logo" src="icons/logo.png" alt="" width="128" height="128">
+      <div class="loader-shadow"></div>
+    </div>
+    <div class="loader-name">PIXELTAPE</div>
+    <div class="loader-bar"><span></span></div>
+    <div class="loader-text">rewinding your tape…</div>
+  </div>
+  <!-- title bar, only shown in the desktop app -->
+  <div class="app-titlebar" aria-hidden="false">
+    <span class="app-title">♫ PIXELTAPE</span>
+    <div class="app-window-buttons">
+      <button id="winMinimize" aria-label="Minimize window">_</button>
+      <button id="winClose" aria-label="Close window">✕</button>
+    </div>
+  </div>
+  <!-- vintage paper scraps scattered behind everything (all drawn in CSS) -->
+  <div class="background-decor" aria-hidden="true">
+    <div class="scrap ticket sc-1"><b>ADMIT ONE</b><small>Nº 024871</small></div>
+    <div class="scrap ticket tk-teal sc-2"><b>SIDE A</b><small>LISTENING ROOM · ROW 3</small></div>
+    <div class="scrap stamp sc-3"><b>25¢</b><small>AIR MAIL</small></div>
+    <div class="scrap note sc-4">track 01 ........ 3:42<br>track 02 ........ 4:05<br>track 03 ........ 2:58<br>♡ play loud</div>
+    <div class="scrap washi sc-5"></div>
+    <div class="scrap ticket tk-mustard sc-6"><b>MIXTAPE CLUB</b><small>Nº 0427 · ADMIT ONE</small></div>
+    <div class="scrap receipt sc-7">RECORD SHOP<br>C-90 TAPE ×2 .... 3.50<br>SLEEVES ........ 0.75<br>THANK YOU ♡</div>
+    <div class="scrap ticket tk-red sc-8"><b>FRIDAY NIGHT</b><small>DANCE HALL · 8 PM</small></div>
+    <div class="scrap stamp stamp-green sc-9"><b>♪</b><small>1987</small></div>
+    <div class="scrap washi washi-blue sc-10"></div>
+    <div class="scrap ticket tk-cream sc-11"><b>RAILWAY</b><small>2ND CLASS · RETURN</small></div>
+    <!-- theme stickers -->
+    <span class="pixel-star star-1"></span><span class="pixel-star star-2"></span>
+    <span class="pixel-star star-3"></span><span class="pixel-star star-4"></span>
+  </div>
+
+  <main class="page-container">
+    <header class="site-header">
+      <div class="brand">
+        <div class="logo"><span class="logo-icon">♫</span> PIXELTAPE</div>
+        <div class="header-tag">YOUR LITTLE MUSIC CORNER</div>
+        <button class="get-app" id="getAppButton" type="button">⬇ GET THE APP</button>
+      </div>
+      <div class="intro">
+        <p class="eyebrow">✦ MADE WITH LOVE &amp; PIXELS ✦</p>
+        <h1>Your music. Your memories. Your mixtape.</h1>
+        <p class="intro-desc">A little cassette player for the songs that feel like home.</p>
+      </div>
+    </header>
+
+    <section class="studio" id="hero">
+
+      <!-- ============ THE DECK ============ -->
+      <div class="player-wrapper" id="playerWrapper">
+        <div class="deck" id="deck">
+          <div class="deck-top">
+            <span class="deck-brand">PIXELTAPE · DECK-01</span>
+            <span class="deck-led" aria-hidden="true"></span>
+          </div>
+
+          <div class="deck-bay">
+            <div class="cassette" id="cassette">
+              <span class="screw screw-tl" aria-hidden="true"></span><span class="screw screw-tr" aria-hidden="true"></span>
+              <span class="screw screw-bl" aria-hidden="true"></span><span class="screw screw-br" aria-hidden="true"></span>
+              <span class="sticker st-a" aria-hidden="true"></span><span class="sticker st-b" aria-hidden="true"></span><span class="sticker st-c" aria-hidden="true"></span>
+
+              <div class="cassette-top">
+                <span class="cassette-brand">PIXELTAPE</span>
+                <span class="cassette-type">C-90 · TYPE I</span>
+              </div>
+
+              <div class="cassette-label">
+                <div class="label-header">
+                  <span class="label-side" id="labelSide">SIDE A</span>
+                  <button class="label-mixtape" id="labelMixtape" type="button" title="Rename this mixtape">PINK MEMORIES</button>
+                  <span class="label-heart">♥</span>
+                </div>
+                <p class="label-song" id="currentSong">Select a song</p>
+                <p class="label-artist" id="currentArtist">Your mixtape awaits ♡</p>
+
+                <div class="cassette-window" aria-hidden="true">
+                  <div class="reel" id="reelLeft"><div class="tape-pack"></div><div class="hub" data-reel="L"></div></div>
+                  <div class="reel" id="reelRight"><div class="tape-pack"></div><div class="hub" data-reel="R"></div></div>
+                  <div class="tape-strand"></div>
+                </div>
+
+                <div class="label-footer"><span id="labelTrackNo">TRACK 00/00</span><span class="label-type" id="labelType">C-90 · BUBBLEGUM</span></div>
+              </div>
+
+              <div class="cassette-bottom" aria-hidden="true">
+                <span class="head-hole"></span><span class="head-hole head-hole-wide"></span><span class="head-hole"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="deck-panel">
+            <div class="deck-readout">
+              <div class="counter" aria-label="Tape counter"><small>COUNT</small><span id="tapeCounter">000</span></div>
+              <div class="vu" id="vuMeter" aria-hidden="true"></div>
+            </div>
+
+            <div class="progress-container">
+              <span class="time" id="currentTime">0:00</span>
+              <input type="range" id="progressBar" min="0" max="100" step="0.1" value="0" aria-label="Song progress">
+              <span class="time" id="duration">0:00</span>
+            </div>
+
+            <div class="deck-keys">
+              <button class="key" id="prevButton" aria-label="Previous song"><span class="key-icon">&#x23EE;&#xFE0E;</span><span class="key-label">REW</span></button>
+              <button class="key key-play" id="playButton" aria-label="Play"><span class="key-icon">▶</span><span class="key-label">PLAY</span></button>
+              <button class="key" id="nextButton" aria-label="Next song"><span class="key-icon">&#x23ED;&#xFE0E;</span><span class="key-label">FF</span></button>
+              <button class="key" id="shuffleButton" aria-pressed="false" aria-label="Shuffle"><span class="key-icon">♧</span><span class="key-label">SHUF</span></button>
+              <button class="key" id="repeatButton" aria-pressed="false" aria-label="Repeat: off"><span class="key-icon">⟲</span><span class="key-label" id="repeatLabel">REP</span></button>
+              <button class="key" id="miniButton" aria-label="Switch to mini player"><span class="key-icon">↘</span><span class="key-label">MINI</span></button>
+            </div>
+
+            <div class="shell-picker" role="group" aria-label="Tape design">
+              <span>TAPE</span>
+              <button class="swatch" data-shell="bubblegum" title="Bubblegum" aria-label="Bubblegum" aria-pressed="true"></button>
+              <button class="swatch" data-shell="cherry" title="Cherry" aria-label="Cherry" aria-pressed="false"></button>
+              <button class="swatch" data-shell="peach" title="Peach" aria-label="Peach" aria-pressed="false"></button>
+              <button class="swatch" data-shell="lemon" title="Rainbow" aria-label="Rainbow" aria-pressed="false"></button>
+              <button class="swatch" data-shell="mint" title="Mint" aria-label="Mint" aria-pressed="false"></button>
+              <button class="swatch" data-shell="sky" title="Ocean" aria-label="Ocean" aria-pressed="false"></button>
+              <button class="swatch" data-shell="lavender" title="Grape" aria-label="Grape" aria-pressed="false"></button>
+              <button class="swatch" data-shell="smoke" title="Crystal" aria-label="Crystal" aria-pressed="false"></button>
+              <button class="swatch" data-shell="noir" title="Noir" aria-label="Noir" aria-pressed="false"></button>
+            </div>
+            <p class="deck-floating-note">♡ Mini player is floating in its own window. Keep this tab open.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ THE TAPE CASE (playlist) ============ -->
+      <div class="playlist-column">
+      <div class="section-heading">
+        <h2>The mixtape tracks</h2>
+        <span class="track-count" id="trackCount">0 TRACKS</span>
+      </div>
+
+      <div class="tape-case">
+        <div class="jcard">
+          <div class="jcard-cover">
+            <p class="cover-small">A MIXTAPE FOR YOU</p>
+            <div class="cover-name">
+              <label for="mixtapeName" class="visually-hidden">Mixtape name</label>
+              <input id="mixtapeName" type="text" maxlength="22" value="Pink Memories" spellcheck="false" autocomplete="off" readonly>
+              <button class="rename-btn" id="renameButton" type="button" aria-label="Rename this mixtape" title="Rename">✎</button>
+              <button class="rename-cancel" id="renameCancel" type="button" aria-label="Cancel renaming" title="Cancel" hidden>✕</button>
+            </div>
+            <div class="cover-art" aria-hidden="true">
+              <div class="cover-tape"><span></span><span></span></div>
+              <span class="sticker st-a" aria-hidden="true"></span><span class="sticker st-b" aria-hidden="true"></span><span class="sticker st-c" aria-hidden="true"></span>
+            </div>
+            <div class="cover-stripes" aria-hidden="true"><span></span><span></span><span></span></div>
+            <p class="cover-foot"><span id="totalRuntime">TOTAL --:--</span><span>C-90</span></p>
+          </div>
+
+          <div class="jcard-spine" aria-hidden="true">
+            <span id="spineName">PINK MEMORIES</span><span id="spineCount">0 TRACKS</span>
+          </div>
+
+          <div class="jcard-tracks">
+            <div class="side"><h3>SIDE A</h3><ol class="side-list" id="sideA"></ol></div>
+            <div class="side"><h3>SIDE B</h3><ol class="side-list" id="sideB"></ol></div>
+            <div class="jcard-actions">
+              <label class="pixel-button">
+                + ADD SONGS
+                <input id="addSongsInput" type="file" accept="audio/*" multiple class="visually-hidden">
+              </label>
+              <button class="pixel-button pixel-button-soft" id="saveTapeButton" type="button">♡ SAVE TAPE</button>
+              <span class="jcard-note" id="jcardNote">Songs you add are saved on this device.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ SAVED TAPES ============ -->
+      <div class="saved-tapes">
+        <div class="saved-heading">
+          <h2>Saved tapes</h2>
+          <span class="track-count" id="savedCount">0 TAPES</span>
+        </div>
+        <div class="saved-filter" id="savedFilter" role="group" aria-label="Show saved tapes by design"></div>
+        <div class="saved-grid" id="savedGrid"></div>
+      </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p>SPACE = play / pause · ← → = seek</p>
+      <p>MADE WITH ♡ · PIXELTAPE © 2026 · <span id="appVersion"></span></p>
+    </footer>
+  </main>
+
+  <!-- ============ MINI CASSETTE ============ -->
+  <aside class="mini-player" id="miniPlayer" aria-label="Mini cassette player">
+    <div class="mc" id="miniDragHandle">
+      <span class="screw screw-tl" aria-hidden="true"></span><span class="screw screw-tr" aria-hidden="true"></span>
+      <span class="screw screw-bl" aria-hidden="true"></span><span class="screw screw-br" aria-hidden="true"></span>
+      <span class="sticker st-a" aria-hidden="true"></span><span class="sticker st-b" aria-hidden="true"></span>
+
+      <div class="mc-top">
+        <span class="mc-brand">♫ PIXELTAPE</span>
+        <div class="mc-actions">
+          <button class="mc-btn" id="floatButton" aria-label="Float over other apps" title="Float over other apps">⧉</button>
+          <button class="mc-btn" id="restoreButton" aria-label="Back to full player" title="Back to full player">⤢</button>
+        </div>
+      </div>
+
+      <div class="mc-label">
+        <div class="mc-label-row">
+          <span class="mc-side" id="miniSide">A</span>
+          <div class="mc-song-info">
+            <div class="mini-song-title" id="miniSongTitle">Select a song</div>
+            <div class="mini-song-artist" id="miniSongArtist">Your mixtape</div>
+          </div>
+          <span class="mc-heart" aria-hidden="true">♥</span>
+        </div>
+        <div class="mc-window" aria-hidden="true">
+          <div class="mini-reel" id="miniReelLeft"><div class="tape-pack"></div><div class="hub" data-reel="L"></div></div>
+          <div class="mini-reel" id="miniReelRight"><div class="tape-pack"></div><div class="hub" data-reel="R"></div></div>
+          <div class="tape-strand"></div>
+        </div>
+        <input type="range" class="mini-seek" id="miniSeek" min="0" max="1000" step="1" value="0" aria-label="Song position">
+      </div>
+
+      <div class="mc-bottom">
+        <button id="miniPrevButton" aria-label="Previous song">&#x23EE;&#xFE0E;</button>
+        <button id="miniPlayButton" aria-label="Play">▶</button>
+        <button id="miniNextButton" aria-label="Next song">&#x23ED;&#xFE0E;</button>
+        <button id="miniRepeatButton" aria-label="Repeat: off" aria-pressed="false">↻</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ DIALOG (save a tape / open a saved tape) ============ -->
+  <div class="modal" id="modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
+        <h3 id="modalTitle">Save this tape?</h3>
+        <button class="modal-close" id="modalClose" type="button" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-actions" id="modalActions"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <audio id="audioPlayer" preload="metadata"></audio>
+  <script src="script.js"></script>
+</body>
+</html>

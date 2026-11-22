@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PIXELTAPE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<!-- The desktop app's floating cassette. The music plays in the main window; this only shows it. -->
+<body class="desktop-mini-window is-desktop" data-shell="bubblegum">
+  <aside class="mini-player" id="miniPlayer" aria-label="Mini cassette player">
+      <div class="mc" id="miniDragHandle">
+        <span class="screw screw-tl" aria-hidden="true"></span><span class="screw screw-tr" aria-hidden="true"></span>
+        <span class="screw screw-bl" aria-hidden="true"></span><span class="screw screw-br" aria-hidden="true"></span>
+        <span class="sticker st-a" aria-hidden="true"></span><span class="sticker st-b" aria-hidden="true"></span>
+
+        <div class="mc-top">
+          <span class="mc-brand">♫ PIXELTAPE</span>
+          <div class="mc-actions">
+            <button class="mc-btn" id="floatButton" aria-label="Float over other apps" title="Float over other apps">⧉</button>
+            <button class="mc-btn" id="restoreButton" aria-label="Back to full player" title="Back to full player">⤢</button>
+          </div>
+        </div>
+
+        <div class="mc-label">
+          <div class="mc-label-row">
+            <span class="mc-side" id="miniSide">A</span>
+            <div class="mc-song-info">
+              <div class="mini-song-title" id="miniSongTitle">Select a song</div>
+              <div class="mini-song-artist" id="miniSongArtist">Your mixtape</div>
+            </div>
+            <span class="mc-heart" aria-hidden="true">♥</span>
+          </div>
+          <div class="mc-window" aria-hidden="true">
+            <div class="mini-reel" id="miniReelLeft"><div class="tape-pack"></div><div class="hub" data-reel="L"></div></div>
+            <div class="mini-reel" id="miniReelRight"><div class="tape-pack"></div><div class="hub" data-reel="R"></div></div>
+            <div class="tape-strand"></div>
+          </div>
+          <input type="range" class="mini-seek" id="miniSeek" min="0" max="1000" step="1" value="0" aria-label="Song position">
+        </div>
+
+        <div class="mc-bottom">
+          <button id="miniPrevButton" aria-label="Previous song">&#x23EE;&#xFE0E;</button>
+          <button id="miniPlayButton" aria-label="Play">▶</button>
+          <button id="miniNextButton" aria-label="Next song">&#x23ED;&#xFE0E;</button>
+          <button id="miniRepeatButton" aria-label="Repeat: off" aria-pressed="false">↻</button>
+        </div>
+      </div>
+    </aside>
+  <script src="mini.js"></script>
+</body>
+</html>

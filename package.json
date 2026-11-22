@@ -1,0 +1,39 @@
+{
+  "name": "pixeltape",
+  "version": "0.6.0",
+  "description": "A little pixel cassette player for the songs that feel like home.",
+  "main": "desktop/main.js",
+  "author": "PIXELTAPE",
+  "license": "UNLICENSED",
+  "private": true,
+  "repository": "github:xaix-ai/pixeltape",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder",
+    "dist:mac": "electron-builder --mac",
+    "dist:win": "electron-builder --win"
+  },
+  "devDependencies": {
+    "electron": "^45.4.1",
+    "electron-builder": "^26.18.0"
+  },
+  "build": {
+    "appId": "com.pixeltape.app",
+    "productName": "PIXELTAPE",
+    "directories": { "buildResources": "build", "output": "dist" },
+    "files": ["index.html", "style.css", "script.js", "icons/**/*", "music/**/*", "desktop/**/*"],
+    "mac": {
+      "target": [{ "target": "dmg", "arch": ["universal"] }],
+      "category": "public.app-category.music"
+    },
+    "dmg": { "artifactName": "PIXELTAPE-mac.${ext}" },
+    "win": { "target": [{ "target": "nsis", "arch": ["x64"] }] },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "PIXELTAPE-windows.${ext}"
+    },
+    "linux": { "target": "AppImage", "artifactName": "PIXELTAPE-linux.${ext}" },
+    "publish": [{ "provider": "github", "releaseType": "release" }]
+  }
+}
