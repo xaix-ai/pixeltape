@@ -1580,6 +1580,7 @@ function openGetAppDialog() {
     mac: `https://github.com/${CONFIG.githubRepo}/releases/latest/download/PIXELTAPE-mac.dmg`,
     windows: `https://github.com/${CONFIG.githubRepo}/releases/latest/download/PIXELTAPE-windows.exe`
   } : null;
+  const siteName = location.host || CONFIG.siteUrl.replace(/^https?:\/\/|\/$/g, "");
 
   openModal("Get PIXELTAPE", body => {
     const section = (title, ...children) => {
@@ -1606,51 +1607,133 @@ function openGetAppDialog() {
       a.rel = "noopener";
       return a;
     };
-
-    // 1) install right here (phones, tablets, Chrome/Edge on computers) — free, no download page
-    if (device === "ios") {
-      section("On this iPhone / iPad", steps([
-        "Open this page in Safari",
-        "Tap the Share button (□↑) at the bottom",
-        "Tap “Add to Home Screen”, then “Add”"
-      ]), para("PIXELTAPE appears on your home screen like any app. Lock-screen controls work while you use other apps."));
-    } else if (installPrompt) {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "pixel-button";
-      button.textContent = "INSTALL ON THIS DEVICE";
-      button.addEventListener("click", async () => {
-        installPrompt.prompt();
-        await installPrompt.userChoice.catch(() => {});
-        installPrompt = null;
-        closeModal();
+    // a fold-out step-by-step guide; the one for this device starts open
+    const guide = (title, list, open, ...extra) => {
+      const details = document.createElement("details");
+      details.className = "getapp-guide";
+      details.open = open;
+      const summary = document.createElement("summary");
+      summary.textContent = title;
+      details.append(summary, steps(list), ...extra);
+      return details;
+    };
+    const copyLine = text => {
+      const code = document.createElement("button");
+      code.type = "button";
+      code.className = "getapp-code";
+      code.textContent = text;
+      code.title = "Click to copy";
+      code.addEventListener("click", async () => {
+        try { await navigator.clipboard.writeText(text); showToast("Copied"); }
+        catch { showToast("Select the text and copy it"); }
       });
-      section(device === "android" ? "On this phone" : "Quick install (no download)",
-        para("Adds PIXELTAPE to your apps with its own icon and window. Free, tiny, updates itself."), button);
-    } else if (device === "android") {
-      section("On this phone", steps([
-        "Open this page in Chrome",
-        "Tap the ⋮ menu at the top right",
-        "Tap “Install app” (or “Add to Home screen”)"
-      ]));
-    } else {
-      section("Quick install (no download)", para("In Chrome or Edge, click the install icon (⊕) at the right end of the address bar. PIXELTAPE opens in its own window."));
+      return code;
+    };
+
+    const GUIDES = {
+      ios: ["How to install on iPhone / iPad", [
+        `Open ${siteName} in Safari (Chrome works too).`,
+        "Tap the Share button, the square with an arrow pointing up. In Safari it's at the bottom (or behind the ⋯ button); in Chrome it's at the top right.",
+        "Scroll down the list and tap “Add to Home Screen”. Don't see it? Tap “Edit Actions” at the bottom and add it.",
+        "If you see “Open as Web App”, keep it switched on. Then tap Add.",
+        "PIXELTAPE is now on your home screen. Open it from there, tap + ADD SONGS and pick songs from Files.",
+        "Music keeps playing with the screen locked, and you can play / pause from the lock screen."
+      ]],
+      android: ["How to install on Android", [
+        `Open ${siteName} in Chrome.`,
+        "Tap the ⋮ menu at the top right.",
+        "Tap “Add to Home screen” (or “Install app”), then tap Install.",
+        "PIXELTAPE shows up on your home screen and in your apps. Open it from there.",
+        "Tap + ADD SONGS and pick songs from your phone.",
+        "Using Samsung Internet? Tap the ≡ menu → Add page to → Home screen."
+      ]],
+      mac: ["How to install on a Mac", [
+        "Click DOWNLOAD FOR MAC (about 220 MB) and wait for it to finish.",
+        "Open your Downloads folder and double-click PIXELTAPE-mac.dmg.",
+        "In the window that opens, drag the PIXELTAPE icon onto the Applications folder.",
+        "Open PIXELTAPE from Applications (or Launchpad).",
+        "Your Mac will say Apple could not verify “PIXELTAPE” is free of malware. Click Done (not Move to Trash). This is normal, see below.",
+        "Click the Apple logo at the top-left of your screen → System Settings → Privacy & Security, and scroll all the way down.",
+        "Next to “PIXELTAPE” was blocked, click Open Anyway, and type your Mac password.",
+        "Click Open Anyway one more time. That's it: from now on it opens normally."
+      ]],
+      windows: ["How to install on Windows", [
+        "Click DOWNLOAD FOR WINDOWS (about 120 MB) and wait for it to finish.",
+        "If your browser says the file isn't commonly downloaded, choose Keep (in Edge: ⋯ → Keep → Show more → Keep anyway).",
+        "Open PIXELTAPE-windows.exe from your Downloads.",
+        "If you see “Windows protected your PC”, click More info, then Run anyway. This is normal, see below.",
+        "Follow the installer: Next → Install → Finish.",
+        "PIXELTAPE is now in your Start menu. Only the first time needs these steps."
+      ]]
+    };
+    const why = () => {
+      const p = para("Why the scary warning? PIXELTAPE is a small free project and doesn't pay Apple or Microsoft for a signing certificate yet, so your computer warns about it the way it does for any app it doesn't know. The app is built straight from its public code on GitHub.");
+      p.className = "getapp-note";
+      return p;
+    };
+    const macGuide = open => guide(...GUIDES.mac, open,
+      para("If your Mac says the app “is damaged and can't be opened”, open Terminal, paste this line, press Enter, then open PIXELTAPE again:"),
+      copyLine("xattr -cr /Applications/PIXELTAPE.app"));
+    const windowsGuide = open => guide(...GUIDES.windows, open);
+    const phone = device === "ios" || device === "android";
+
+    // 1) phones: the website installs itself like an app, free and tiny
+    if (phone) {
+      const box = section(device === "ios" ? "On this iPhone / iPad" : "On this phone");
+      if (device === "android" && installPrompt) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "pixel-button";
+        button.textContent = "INSTALL ON THIS PHONE";
+        button.addEventListener("click", async () => {
+          installPrompt.prompt();
+          await installPrompt.userChoice.catch(() => {});
+          installPrompt = null;
+          closeModal();
+        });
+        box.append(button, para("Tap it, then tap Install. Or follow the steps below."));
+      }
+      box.append(
+        guide(...GUIDES[device], true),
+        guide(...GUIDES[device === "ios" ? "android" : "ios"], false)
+      );
     }
 
-    // 2) the full desktop app — the one with the cassette floating over every app
-    if (device === "mac" || device === "windows" || device === "other") {
+    // 2) computers: the full desktop app, with the cassette floating over every app
+    if (!phone) {
       const box = section("Desktop app — cassette floats over all your apps");
       if (downloads) {
         const row = document.createElement("div");
         row.className = "getapp-downloads";
         const order = device === "windows" ? ["windows", "mac"] : ["mac", "windows"];
         order.forEach((os, i) => row.append(link(os === "mac" ? "DOWNLOAD FOR MAC" : "DOWNLOAD FOR WINDOWS", downloads[os], i === 0)));
-        box.append(row, para(device === "windows"
-          ? "First time it opens, Windows may say “Windows protected your PC”: click More info → Run anyway."
-          : "First time it opens, your Mac may block it: go to System Settings → Privacy & Security → Open Anyway."));
+        box.append(row,
+          device === "windows" ? windowsGuide(true) : macGuide(true),
+          device === "windows" ? macGuide(false) : windowsGuide(false),
+          why());
       } else {
         box.append(para("Coming soon"));
       }
+
+      // a lighter option right in the browser, plus how to get it on a phone
+      const quick = section("Or install it from the browser (no download)");
+      if (installPrompt) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "pixel-button pixel-button-soft";
+        button.textContent = "INSTALL FROM CHROME / EDGE";
+        button.addEventListener("click", async () => {
+          installPrompt.prompt();
+          await installPrompt.userChoice.catch(() => {});
+          installPrompt = null;
+          closeModal();
+        });
+        quick.append(button);
+      } else {
+        quick.append(para("In Chrome or Edge, click the install icon (⊕) at the right end of the address bar. PIXELTAPE opens in its own window."));
+      }
+      const phones = section("On your phone");
+      phones.append(para(`Open ${siteName} on your phone, then:`), guide(...GUIDES.ios, false), guide(...GUIDES.android, false));
     }
 
     const note = para("Your songs and tapes stay on the device you add them on.");
