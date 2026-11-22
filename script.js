@@ -1618,7 +1618,7 @@ function openGetAppDialog() {
       const button = document.createElement("button");
       button.type = "button";
       button.className = "pixel-button";
-      button.textContent = "⬇ INSTALL ON THIS DEVICE";
+      button.textContent = "INSTALL ON THIS DEVICE";
       button.addEventListener("click", async () => {
         installPrompt.prompt();
         await installPrompt.userChoice.catch(() => {});
@@ -1721,27 +1721,57 @@ setupAnalytics();
   else showBlankTape();
 })();
 
-/* ---------- notes: feedback, suggestions, hellos ----------
-   A note is written on a tape and dropped onto a pile. The message goes to Netlify Forms
-   (only the PIXELTAPE maker reads it: Netlify → your project → Forms). The pile itself
-   lives on this device, so each person sees the tapes they sent stacking up. */
+/* ---------- notes: feedback, suggestions, hellos — and replies from the maker ----------
+   A note is written on a tape and dropped onto a pile. It goes to the PIXELTAPE notes server
+   (netlify/functions/notes.mjs); the maker answers from inbox.html, and the answer shows up
+   on that same tape in the sender's pile. The pile lives on this device, together with a
+   secret token per note, which is what lets this device (and only this one) read the replies. */
 const NOTES_KEY = "pixeltape:notes";
 const NOTE_TYPES = ["FEEDBACK", "SUGGESTION", "BUG", "HELLO"];
+const NOTES_API = `${isWeb ? "/" : CONFIG.siteUrl}api/notes`;
+const noteButton = $("noteButton");
 const loadNotes = () => { try { return JSON.parse(localStorage.getItem(NOTES_KEY)) || []; } catch { return []; } };
 const storeNotes = notes => { try { localStorage.setItem(NOTES_KEY, JSON.stringify(notes)); } catch { /* storage full: the note was still sent */ } };
 const noteDate = time => new Date(time).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+const hasNewReply = note => note.reply && note.replyTime > (note.seen || 0);
 
 async function sendNote({ type, name, message }) {
-  const body = new URLSearchParams({ "form-name": "feedback", type, name, message, version: CONFIG.version, "bot-field": "" });
-  if (isWeb && !isLocalhost) {
-    const response = await fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  } else if (window.pixeltapeDesktop) {
-    // the desktop app isn't on the website, so it posts straight to the live site
-    await fetch(CONFIG.siteUrl, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body });
-  } else {
-    throw new Error("local");
+  const response = await fetch(NOTES_API, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ type, name, message, version: CONFIG.version })
+  });
+  if (!response.ok) throw new Error(response.status === 404 && isLocalhost ? "local" : `HTTP ${response.status}`);
+  return response.json(); // { id, token }
+}
+
+// ask the server whether the maker answered any of the notes sent from this device
+async function checkReplies() {
+  const notes = loadNotes();
+  const asked = notes.filter(n => n.token).map(({ id, token }) => ({ id, token }));
+  if (!asked.length) return notes;
+  try {
+    const response = await fetch(`${NOTES_API}/replies`, {
+      method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ notes: asked })
+    });
+    if (!response.ok) return notes;
+    const { replies } = await response.json();
+    const latest = loadNotes();
+    replies.forEach(r => {
+      const note = latest.find(n => n.id === r.id);
+      if (note) { note.reply = r.reply; note.replyTime = r.replyTime; }
+    });
+    storeNotes(latest);
+    markNoteButton();
+    return latest;
+  } catch {
+    return notes; // offline: try again later
   }
+}
+function markNoteButton() {
+  const fresh = loadNotes().filter(hasNewReply).length;
+  noteButton.classList.toggle("has-reply", fresh > 0);
+  noteButton.textContent = fresh ? `✎ NOTES · ${fresh} NEW ${fresh === 1 ? "REPLY" : "REPLIES"}` : "✎ SEND A NOTE";
 }
 
 function buildNotePile(notes, onOpen, dropId) {
@@ -1757,11 +1787,11 @@ function buildNotePile(notes, onOpen, dropId) {
   notes.forEach(note => { // oldest first in the DOM; the pile is drawn bottom-up, so the newest sits on top
     const spine = document.createElement("button");
     spine.type = "button";
-    spine.className = `note-spine${note.id === dropId ? " drop-in" : ""}`;
+    spine.className = `note-spine${note.id === dropId ? " drop-in" : ""}${hasNewReply(note) ? " has-new" : ""}`;
     spine.dataset.shell = designOf(note.shell);
     spine.style.setProperty("--tilt", `${note.tilt}deg`);
     spine.style.setProperty("--shift", `${note.shift}px`);
-    spine.setAttribute("aria-label", `Open your ${note.type.toLowerCase()} note from ${noteDate(note.time)}`);
+    spine.setAttribute("aria-label", `Open your ${note.type.toLowerCase()} note from ${noteDate(note.time)}${note.reply ? ", it has a reply" : ""}`);
     const label = document.createElement("span");
     label.className = "note-spine-label";
     const kind = document.createElement("b");
@@ -1769,9 +1799,17 @@ function buildNotePile(notes, onOpen, dropId) {
     const preview = document.createElement("span");
     preview.className = "note-spine-text";
     preview.textContent = note.message;
-    const date = document.createElement("i");
-    date.textContent = noteDate(note.time);
-    label.append(kind, preview, date);
+    label.append(kind, preview);
+    if (note.reply) {
+      const tag = document.createElement("em");
+      tag.className = "note-reply-tag";
+      tag.textContent = hasNewReply(note) ? "NEW REPLY" : "REPLIED";
+      label.append(tag);
+    } else {
+      const date = document.createElement("i");
+      date.textContent = noteDate(note.time);
+      label.append(date);
+    }
     spine.append(label);
     spine.addEventListener("click", () => onOpen(note));
     pile.append(spine);
@@ -1779,8 +1817,8 @@ function buildNotePile(notes, onOpen, dropId) {
   return pile;
 }
 
-function openNotesDialog(dropId) {
-  const notes = loadNotes();
+function openNotesDialog(dropId, freshNotes) {
+  const notes = freshNotes || loadNotes();
   let type = "FEEDBACK", nameInput, messageInput, sendButton;
 
   const send = async () => {
@@ -1788,18 +1826,20 @@ function openNotesDialog(dropId) {
     if (message.length < 2) { showToast("Write something first"); messageInput.focus(); return; }
     sendButton.disabled = true;
     sendButton.textContent = "SENDING…";
+    let saved;
     try {
-      await sendNote({ type, name: nameInput.value.trim(), message });
+      saved = await sendNote({ type, name: nameInput.value.trim(), message });
     } catch (error) {
       sendButton.disabled = false;
       sendButton.textContent = "SEND";
       showToast(error.message === "local"
         ? "Notes only send from the live site (pixeltape.netlify.app)"
-        : "Couldn't send your note. Check your internet and try again");
+        : navigator.onLine === false ? "You're offline. Connect to the internet and try again"
+        : "Couldn't send your note right now. Try again in a bit");
       return;
     }
     const note = {
-      id: Date.now().toString(36), time: Date.now(), type, name: nameInput.value.trim(), message,
+      id: saved.id, token: saved.token, time: Date.now(), type, name: nameInput.value.trim(), message,
       shell: document.body.dataset.shell, tilt: +(Math.random() * 4 - 2).toFixed(1), shift: Math.round(Math.random() * 16 - 8)
     };
     storeNotes([...loadNotes(), note]);
@@ -1810,7 +1850,7 @@ function openNotesDialog(dropId) {
   openModal("NOTES FOR PIXELTAPE", body => {
     const intro = document.createElement("p");
     intro.className = "modal-text";
-    intro.textContent = "Feedback, a suggestion, a bug, or just a hello? Write it on a tape and drop it in. Only the PIXELTAPE maker reads these.";
+    intro.textContent = "Feedback, a suggestion, a bug, or just a hello? Write it on a tape and drop it in. When PIXELTAPE writes back, the reply shows up on your tape.";
 
     const pileTitle = document.createElement("div");
     pileTitle.className = "modal-field";
@@ -1868,6 +1908,14 @@ function openNotesDialog(dropId) {
   if (dropId) modalBody.querySelector(".note-pile")?.scrollIntoView({ block: "nearest" });
   else messageInput.focus();
 
+  // first time open: fetch any new replies and redraw the pile if something changed
+  if (!freshNotes && !dropId) {
+    checkReplies().then(latest => {
+      const changed = latest.some(n => { const old = notes.find(o => o.id === n.id); return old && old.replyTime !== n.replyTime; });
+      if (changed && !modal.hidden && modalTitle.textContent === "NOTES FOR PIXELTAPE") openNotesDialog(undefined, latest);
+    });
+  }
+
   function openNote(note) {
     openModal(`${note.type} · ${noteDate(note.time)}`, body => {
       const card = document.createElement("div");
@@ -1884,10 +1932,34 @@ function openNotesDialog(dropId) {
       band.textContent = `${note.type} · SENT ${noteDate(note.time).toUpperCase()}`;
       card.append(head, paper, band);
       body.append(card);
+
+      const replyBox = document.createElement("div");
+      replyBox.className = "note-reply";
+      if (note.reply) {
+        const replyHead = document.createElement("div");
+        replyHead.className = "note-reply-head";
+        replyHead.textContent = `REPLY FROM PIXELTAPE · ${noteDate(note.replyTime).toUpperCase()}`;
+        const replyText = document.createElement("p");
+        replyText.className = "note-reply-text";
+        replyText.textContent = note.reply;
+        replyBox.append(replyHead, replyText);
+      } else {
+        replyBox.classList.add("waiting");
+        replyBox.textContent = "No reply yet. When PIXELTAPE writes back, it will show up right here.";
+      }
+      body.append(replyBox);
     }, [
       { label: "← BACK TO THE PILE", onClick: () => openNotesDialog() },
       { label: "CLOSE", soft: true, onClick: closeModal }
     ]);
+    if (hasNewReply(note)) { // mark the reply as read
+      const latest = loadNotes();
+      const saved = latest.find(n => n.id === note.id);
+      if (saved) { saved.seen = saved.replyTime; storeNotes(latest); }
+      markNoteButton();
+    }
   }
 }
-$("noteButton").addEventListener("click", () => openNotesDialog());
+noteButton.addEventListener("click", () => openNotesDialog());
+markNoteButton();
+if (loadNotes().some(n => n.token)) setTimeout(checkReplies, 3000); // quietly look for replies after the page settles

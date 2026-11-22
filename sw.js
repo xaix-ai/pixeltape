@@ -44,6 +44,7 @@ self.addEventListener("fetch", event => {
   if (url.protocol !== "http:" && url.protocol !== "https:") return;
   if (request.headers.has("range")) return;                 // audio streaming: let the browser handle it
   if (url.hostname.endsWith("cloudflareinsights.com")) return; // analytics: never cache
+  if (url.pathname.startsWith("/api/")) return;                // notes server: always live
   const isFont = url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com";
   if (url.origin !== self.location.origin && !isFont) return;
 

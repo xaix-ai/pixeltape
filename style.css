@@ -41,6 +41,8 @@
 
 
 
+
+
 /* THEME COLOURS (generated) */
 :root,body{--t-3e2636:#3e2636;--t-5a3b52:#5a3b52;--t-5d3a4c:#5d3a4c;--t-6e4559:#6e4559;--t-76516e:#76516e;--t-9f5d8c:#9f5d8c;--t-a160-80-130-_16:rgba(160,80,130,.16);--t-a181-100-153-_1:rgba(181,100,153,.1);--t-a198-127-169-_22:rgba(198,127,169,.22);--t-a210-110-110-_45:rgba(210,110,110,.45);--t-a236-170-180-_8:rgba(236,170,180,.8);--t-a255-214-236-_6:rgba(255,214,236,.6);--t-a255-214-236-_75:rgba(255,214,236,.75);--t-a255-232-236-_8:rgba(255,232,236,.8);--t-a40-30-30-_4:rgba(40,30,30,.4);--t-a62-38-54-_25:rgba(62,38,54,.25);--t-a62-38-54-_35:rgba(62,38,54,.35);--t-a66e95:#a66e95;--t-a74d87:#a74d87;--t-a9568a:#a9568a;--t-a979d8:#a979d8;--t-ad5c91:#ad5c91;--t-ad87a5:#ad87a5;--t-b66b9d:#b66b9d;--t-bd79a6:#bd79a6;--t-bd8aab:#bd8aab;--t-c06ca0:#c06ca0;--t-c18bb0:#c18bb0;--t-c38ab0:#c38ab0;--t-c47aa7:#c47aa7;--t-c55c9b:#c55c9b;--t-c76ba3:#c76ba3;--t-c79ab8:#c79ab8;--t-c98bb3:#c98bb3;--t-d18bb7:#d18bb7;--t-d23c96:#d23c96;--t-d2a9c3:#d2a9c3;--t-d9a3c4:#d9a3c4;--t-df79b5:#df79b5;--t-df91bf:#df91bf;--t-e0457f:#e0457f;--t-e06a8f:#e06a8f;--t-e2a7c9:#e2a7c9;--t-e3b2d1:#e3b2d1;--t-e45ca7:#e45ca7;--t-e4a0ca:#e4a0ca;--t-e5a0ca:#e5a0ca;--t-e77bb7:#e77bb7;--t-e8b1d3:#e8b1d3;--t-efcfe0:#efcfe0;--t-f08cc5:#f08cc5;--t-f0c6dd:#f0c6dd;--t-f5cde5:#f5cde5;--t-f6d6e7:#f6d6e7;--t-f6d9ea:#f6d9ea;--t-ff4fa3:#ff4fa3;--t-ff5f8f:#ff5f8f;--t-ff8fb3:#ff8fb3;--t-ff8fc8:#ff8fc8;--t-ff9fd0:#ff9fd0;--t-ffd2ea:#ffd2ea;--t-ffd5ec:#ffd5ec;--t-ffd6ec:#ffd6ec;--t-ffe3f1:#ffe3f1;--t-ffe6f4:#ffe6f4;--t-ffe8f5:#ffe8f5;--t-fff1f8:#fff1f8;--t-fff1f9:#fff1f9;--t-fff4fb:#fff4fb;--t-fff5fb:#fff5fb;}
 body[data-shell="lavender"]{--t-3e2636:#2f273d;--t-5a3b52:#453c59;--t-5d3a4c:#4c3b5c;--t-6e4559:#5b476c;--t-76516e:#5b5275;--t-9f5d8c:#73609c;--t-a160-80-130-_16:rgba(113,83,157,.16);--t-a181-100-153-_1:rgba(131,103,178,.1);--t-a198-127-169-_22:rgba(159,130,195,.22);--t-a210-110-110-_45:rgba(206,114,203,.45);--t-a236-170-180-_8:rgba(226,173,233,.8);--t-a255-214-236-_6:rgba(234,216,253,.6);--t-a255-214-236-_75:rgba(234,216,253,.75);--t-a255-232-236-_8:rgba(251,233,254,.8);--t-a40-30-30-_4:rgba(40,30,39,.4);--t-a62-38-54-_25:rgba(47,39,61,.25);--t-a62-38-54-_35:rgba(47,39,61,.35);--t-a66e95:#8270a4;--t-a74d87:#7151a3;--t-a9568a:#7859a6;--t-a979d8:#7da5d4;--t-ad5c91:#7b5faa;--t-ad87a5:#9189ab;--t-b66b9d:#876eb3;--t-bd79a6:#937cba;--t-bd8aab:#9e8cbb;--t-c06ca0:#8f6fbd;--t-c18bb0:#9e8dbf;--t-c38ab0:#a08cc1;--t-c47aa7:#9a7dc1;--t-c55c9b:#8a60c1;--t-c76ba3:#936fc3;--t-c79ab8:#ab9cc5;--t-c98bb3:#a48dc7;--t-d18bb7:#a88ece;--t-d23c96:#7e42cc;--t-d2a9c3:#baabd0;--t-d9a3c4:#baa5d7;--t-df79b5:#a77ddb;--t-df91bf:#b494dc;--t-e0457f:#a94bda;--t-e06a8f:#bd6fdb;--t-e2a7c9:#c2a9e0;--t-e3b2d1:#c6b4e1;--t-e45ca7:#9e61df;--t-e4a0ca:#bda3e1;--t-e5a0ca:#bea3e2;--t-e77bb7:#af7fe3;--t-e8b1d3:#c8b3e6;--t-efcfe0:#dfd0ee;--t-f08cc5:#bb90ec;--t-f0c6dd:#dac8ee;--t-f5cde5:#dfcff3;--t-f6d6e7:#e6d7f5;--t-f6d9ea:#e6daf5;--t-ff4fa3:#b056f8;--t-ff5f8f:#d165f9;--t-ff8fb3:#dd93fb;--t-ff8fc8:#ca93fb;--t-ff9fd0:#d1a3fb;--t-ffd2ea:#e8d4fd;--t-ffd5ec:#e9d7fd;--t-ffd6ec:#ead8fd;--t-ffe3f1:#f2e4fe;--t-ffe6f4:#f2e7fe;--t-ffe8f5:#f3e9fe;--t-fff1f8:#f8f2fe;--t-fff1f9:#f8f2fe;--t-fff4fb:#f8f4ff;--t-fff5fb:#f9f5ff;}
@@ -738,3 +740,13 @@ body[data-shell="ink"] .cassette-label .design-badge{top:67%;font-size:clamp(7px
 }
 .note-open-band{background:var(--band);color:var(--band-ink);font-family:"Press Start 2P",monospace;font-size:8px;letter-spacing:1px;padding:6px 10px;border-radius:0 0 3px 3px}
 .modal-text{font-size:19px;line-height:1.3;margin:0 0 4px}
+
+/* replies on notes */
+.note-reply-tag{font-style:normal;font-size:12px;letter-spacing:1px;flex-shrink:0;padding:2px 5px;border:1.5px solid currentColor;border-radius:3px}
+.note-spine.has-new .note-reply-tag{background:rgb(216 53 42);border-color:rgb(216 53 42);color:#fff;animation:reply-blink 1.4s steps(2) infinite}
+@keyframes reply-blink{50%{opacity:.55}}
+.note-reply{margin-top:12px;background:var(--cream);border:2px dashed var(--shell-3);border-radius:6px;padding:10px 12px}
+.note-reply.waiting{font-size:17px;color:var(--text-light);text-align:center}
+.note-reply-head{font-family:"Press Start 2P",monospace;font-size:8px;letter-spacing:1px;color:var(--shell-ink);margin-bottom:6px}
+.note-reply-text{margin:0;font-family:"Caveat",cursive;font-size:23px;line-height:27px;white-space:pre-wrap;overflow-wrap:anywhere;max-height:40vh;overflow:auto}
+.note-button.has-reply{background:rgb(216 53 42);border-color:rgb(160 35 28);box-shadow:2px 2px 0 rgb(120 25 20)}

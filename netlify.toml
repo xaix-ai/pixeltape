@@ -3,6 +3,8 @@
   publish = "."
   # Stamps a fresh build id into sw.js on every deploy — that's what makes visitors
   # get the "new update — REFRESH" message.
+  # the notes server (netlify/functions/notes.mjs) only needs @netlify/blobs, not the Electron download
+  environment = { ELECTRON_SKIP_BINARY_DOWNLOAD = "1" }
   command = "sed -i \"s/__BUILD__/${COMMIT_REF:-manual-$(date +%s)}/\" sw.js && echo 'PIXELTAPE ready'"
 
 # always check sw.js for a new version (never keep an old copy)
@@ -29,6 +31,29 @@
   force = true
 [[redirects]]
   from = "/package.json"
+  to = "/404"
+  status = 404
+  force = true
+
+# the inbox page is just for you: keep it out of search engines
+[[headers]]
+  for = "/inbox.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+# keep the notes server's source and build leftovers off the public site
+[[redirects]]
+  from = "/netlify/*"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/node_modules/*"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/package-lock.json"
   to = "/404"
   status = 404
   force = true
