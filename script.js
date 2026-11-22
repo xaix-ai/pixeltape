@@ -5,7 +5,7 @@
 /* ======================= YOUR SETTINGS =======================
    Fill these in once (the guide shows where each value comes from). */
 const CONFIG = {
-  version: "0.6.0",        // shown in the footer; keep it the same as "version" in package.json
+  version: "0.6.1",        // shown in the footer; keep it the same as "version" in package.json
   analyticsToken: "6a7eec2c81b446f6b2f14659655d0826",      // Cloudflare Web Analytics token — leave "" to turn analytics off
   githubRepo: "xaix-ai/pixeltape",          // "your-username/pixeltape" — powers the Mac / Windows download buttons
   siteUrl: "https://pixeltape.netlify.app/" // the live website — the desktop app sends notes here
