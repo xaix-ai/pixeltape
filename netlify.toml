@@ -1,6 +1,8 @@
 # PIXELTAPE website on Netlify: plain HTML/CSS/JS, nothing to compile.
 [build]
   publish = "."
+  # don't spend a deploy when a push only touches the desktop app, the workflow or the README
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':(exclude).github' ':(exclude)desktop' ':(exclude)build' ':(exclude)README.md' ':(exclude)package.json' ':(exclude)package-lock.json'"
   # Stamps a fresh build id into sw.js on every deploy — that's what makes visitors
   # get the "new update — REFRESH" message.
   # the notes server (netlify/functions/notes.mjs) only needs @netlify/blobs, not the Electron download

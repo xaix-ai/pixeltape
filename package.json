@@ -13,30 +13,65 @@
     "dist:mac": "electron-builder --mac",
     "dist:win": "electron-builder --win"
   },
-  "dependencies": {
-    "@netlify/blobs": "^11.1.9"
-  },
   "devDependencies": {
+    "@netlify/blobs": "^11.1.9",
     "electron": "^45.4.1",
     "electron-builder": "^26.18.0"
   },
   "build": {
     "appId": "com.pixeltape.app",
     "productName": "PIXELTAPE",
-    "directories": { "buildResources": "build", "output": "dist" },
-    "files": ["index.html", "style.css", "script.js", "icons/**/*", "music/**/*", "desktop/**/*"],
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    },
+    "files": [
+      "index.html",
+      "style.css",
+      "script.js",
+      "icons/**/*",
+      "music/**/*",
+      "desktop/**/*"
+    ],
     "mac": {
-      "target": [{ "target": "dmg", "arch": ["universal"] }],
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
       "category": "public.app-category.music"
     },
-    "dmg": { "artifactName": "PIXELTAPE-mac.${ext}" },
-    "win": { "target": [{ "target": "nsis", "arch": ["x64"] }] },
+    "dmg": {
+      "artifactName": "PIXELTAPE-mac.${ext}"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "artifactName": "PIXELTAPE-windows.${ext}"
     },
-    "linux": { "target": "AppImage", "artifactName": "PIXELTAPE-linux.${ext}" },
-    "publish": [{ "provider": "github", "releaseType": "release" }]
+    "linux": {
+      "target": "AppImage",
+      "artifactName": "PIXELTAPE-linux.${ext}"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "releaseType": "draft"
+      }
+    ],
+    "icon": "build/icon.png"
   }
 }
