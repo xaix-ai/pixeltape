@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PIXELTAPE — Your Little Mixtape</title>
+  <title>pixeltape</title>
   <meta name="description" content="A little pixel cassette player for the songs that feel like home. Make mixtapes from your own music.">
   <!-- installable app (PWA) -->
   <link rel="manifest" href="manifest.webmanifest">
@@ -47,10 +47,10 @@
     <div class="scrap ticket sc-1"><b>ADMIT ONE</b><small>Nº 024871</small></div>
     <div class="scrap ticket tk-teal sc-2"><b>SIDE A</b><small>LISTENING ROOM · ROW 3</small></div>
     <div class="scrap stamp sc-3"><b>25¢</b><small>AIR MAIL</small></div>
-    <div class="scrap note sc-4">track 01 ........ 3:42<br>track 02 ........ 4:05<br>track 03 ........ 2:58<br>♡ play loud</div>
+    <div class="scrap note sc-4">track 01 ........ 3:42<br>track 02 ........ 4:05<br>track 03 ........ 2:58<br>play loud</div>
     <div class="scrap washi sc-5"></div>
     <div class="scrap ticket tk-mustard sc-6"><b>MIXTAPE CLUB</b><small>Nº 0427 · ADMIT ONE</small></div>
-    <div class="scrap receipt sc-7">RECORD SHOP<br>C-90 TAPE ×2 .... 3.50<br>SLEEVES ........ 0.75<br>THANK YOU ♡</div>
+    <div class="scrap receipt sc-7">RECORD SHOP<br>C-90 TAPE ×2 .... 3.50<br>SLEEVES ........ 0.75<br>THANK YOU</div>
     <div class="scrap ticket tk-red sc-8"><b>FRIDAY NIGHT</b><small>DANCE HALL · 8 PM</small></div>
     <div class="scrap stamp stamp-green sc-9"><b>♪</b><small>1987</small></div>
     <div class="scrap washi washi-blue sc-10"></div>
@@ -65,11 +65,11 @@
       <div class="brand">
         <div class="logo"><span class="logo-icon">♫</span> PIXELTAPE</div>
         <div class="header-tag">YOUR LITTLE MUSIC CORNER</div>
-        <button class="get-app" id="getAppButton" type="button">⬇ GET THE APP</button>
+        <button class="get-app" id="getAppButton" type="button">GET THE APP</button>
       </div>
       <div class="intro">
-        <p class="eyebrow">✦ MADE WITH LOVE &amp; PIXELS ✦</p>
-        <h1>Your music. Your memories. Your mixtape.</h1>
+        <p class="eyebrow">MADE WITH LUUUV &amp; PIXELS</p>
+        <h1>Your music. Your mixtape.</h1>
         <p class="intro-desc">A little cassette player for the songs that feel like home.</p>
       </div>
     </header>
@@ -99,10 +99,12 @@
                 <div class="label-header">
                   <span class="label-side" id="labelSide">SIDE A</span>
                   <button class="label-mixtape" id="labelMixtape" type="button" title="Rename this mixtape">PINK MEMORIES</button>
-                  <span class="label-heart">♥</span>
+                  <span class="label-heart">★</span>
                 </div>
+                <span class="design-badge" aria-hidden="true">LNGSHOT</span>
+                <div class="label-stickers sticker-layer" id="labelStickers" aria-hidden="true"></div>
                 <p class="label-song" id="currentSong">Select a song</p>
-                <p class="label-artist" id="currentArtist">Your mixtape awaits ♡</p>
+                <p class="label-artist" id="currentArtist">Your mixtape awaits</p>
 
                 <div class="cassette-window" aria-hidden="true">
                   <div class="reel" id="reelLeft"><div class="tape-pack"></div><div class="hub" data-reel="L"></div></div>
@@ -151,8 +153,9 @@
               <button class="swatch" data-shell="lavender" title="Grape" aria-label="Grape" aria-pressed="false"></button>
               <button class="swatch" data-shell="smoke" title="Crystal" aria-label="Crystal" aria-pressed="false"></button>
               <button class="swatch" data-shell="noir" title="Noir" aria-label="Noir" aria-pressed="false"></button>
+              <button class="swatch" data-shell="ink" title="LNGSHOT" aria-label="LNGSHOT" aria-pressed="false"></button>
             </div>
-            <p class="deck-floating-note">♡ Mini player is floating in its own window. Keep this tab open.</p>
+            <p class="deck-floating-note">Mini player is floating in its own window. Keep this tab open.</p>
           </div>
         </div>
       </div>
@@ -194,7 +197,7 @@
                 + ADD SONGS
                 <input id="addSongsInput" type="file" accept="audio/*" multiple class="visually-hidden">
               </label>
-              <button class="pixel-button pixel-button-soft" id="saveTapeButton" type="button">♡ SAVE TAPE</button>
+              <button class="pixel-button pixel-button-soft" id="saveTapeButton" type="button">SAVE TAPE</button>
               <span class="jcard-note" id="jcardNote">Songs you add are saved on this device.</span>
             </div>
           </div>
@@ -214,8 +217,8 @@
     </section>
 
     <footer class="site-footer">
-      <p>SPACE = play / pause · ← → = seek</p>
-      <p>MADE WITH ♡ · PIXELTAPE © 2026 · <span id="appVersion"></span></p>
+      <p>xaixai ^^</p>
+      <p>MADE WITH LUUUV · PIXELTAPE © 2026 · <span id="appVersion"></span></p>
     </footer>
   </main>
 
@@ -241,7 +244,7 @@
             <div class="mini-song-title" id="miniSongTitle">Select a song</div>
             <div class="mini-song-artist" id="miniSongArtist">Your mixtape</div>
           </div>
-          <span class="mc-heart" aria-hidden="true">♥</span>
+          <span class="mc-heart" aria-hidden="true">★</span>
         </div>
         <div class="mc-window" aria-hidden="true">
           <div class="mini-reel" id="miniReelLeft"><div class="tape-pack"></div><div class="hub" data-reel="L"></div></div>

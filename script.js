@@ -6,7 +6,7 @@
    Fill these in once (the guide shows where each value comes from). */
 const CONFIG = {
   version: "0.6.0",        // shown in the footer; keep it the same as "version" in package.json
-  analyticsToken: "",      // Cloudflare Web Analytics token — leave "" to turn analytics off
+  analyticsToken: "6a7eec2c81b446f6b2f14659655d0826",      // Cloudflare Web Analytics token — leave "" to turn analytics off
   githubRepo: "xaix-ai/pixeltape"           // "your-username/pixeltape" — powers the Mac / Windows download buttons
 };
 /* ============================================================= */
@@ -315,7 +315,7 @@ function showBlankTape() {
   audioPlayer.load();
   currentTrackIndex = 0;
   currentSongDisplay.textContent = miniSongTitle.textContent = "Blank tape";
-  currentArtistDisplay.textContent = miniSongArtist.textContent = "Add some songs ♡";
+  currentArtistDisplay.textContent = miniSongArtist.textContent = "Add some songs";
   currentTimeDisplay.textContent = durationDisplay.textContent = "0:00";
   setProgressUI(0);
   updateLabelInfo();
@@ -393,7 +393,7 @@ function loadTrack(index, { animate = true } = {}) {
 }
 
 async function playTrack() {
-  if (!playlist.length) { showToast("Add some songs first ♡"); return; }
+  if (!playlist.length) { showToast("Add some songs first"); return; }
   if (!audioPlayer.getAttribute("src")) loadTrack(currentTrackIndex, { animate: false });
   wantsToPlay = true;
   setupAnalyser();
@@ -401,7 +401,7 @@ async function playTrack() {
     if (audioCtx && audioCtx.state === "suspended") await audioCtx.resume();
     await audioPlayer.play();
   } catch (error) {
-    if (error.name === "NotAllowedError") showToast("Your browser blocked autoplay — press PLAY ♡");
+    if (error.name === "NotAllowedError") showToast("Your browser blocked autoplay — press PLAY");
     // AbortError = a newer track interrupted this one (normal when skipping fast).
     // Missing/broken files are reported by the "error" listener below.
   }
@@ -423,7 +423,7 @@ function nextTrack({ auto = false } = {}) {
   if (atEnd) {
     if (isShuffle) buildOrder({ startFresh: true });
     loadTrack(order[0]);
-    if (auto && repeatMode !== "all") { showToast("End of tape ♡ Press PLAY to listen again"); return; }
+    if (auto && repeatMode !== "all") { showToast("End of tape Press PLAY to listen again"); return; }
   } else {
     loadTrack(order[orderPos + 1]);
   }
@@ -623,10 +623,145 @@ if ("mediaSession" in navigator) {
 
 /* ---------- customization ---------- */
 // tape designs (the data-shell value → the name people see)
-const DESIGNS = ["bubblegum", "cherry", "peach", "lemon", "mint", "sky", "lavender", "smoke", "noir"];
+const DESIGNS = ["bubblegum", "cherry", "peach", "lemon", "mint", "sky", "lavender", "smoke", "noir", "ink"];
 const DESIGN_NAMES = { bubblegum: "Bubblegum", cherry: "Cherry", peach: "Peach", lemon: "Rainbow", mint: "Mint",
-                       sky: "Ocean", lavender: "Grape", smoke: "Crystal", noir: "Noir" };
+                       sky: "Ocean", lavender: "Grape", smoke: "Crystal", noir: "Noir", ink: "LNGSHOT" };
 const designOf = name => (DESIGNS.includes(name) ? name : "bubblegum");
+
+/* ---------- stickers ----------
+   A tape can carry up to 6 stickers: pictures (any photo or drawing → a pixel sticker)
+   or words (pixel text). Each one is { src, x, y, h, r }: where its middle sits on the label
+   (x / y in %), its height (% of the label) and its tilt. Drag them around in the tape dialog. */
+const MAX_STICKERS = 6;
+const STICKER_SPOTS = [ // where new stickers land, in order
+  { x: 89, y: 64, r: 6 }, { x: 11, y: 64, r: -7 }, { x: 50, y: 66, r: -3 },
+  { x: 83, y: 22, r: 8 }, { x: 17, y: 28, r: -5 }, { x: 50, y: 40, r: 4 }
+];
+const labelStickers = $("labelStickers");
+let currentStickers = [];
+// older versions saved a single "picture"
+const stickersOf = item => Array.isArray(item?.stickers) ? item.stickers
+  : item?.picture ? [{ src: item.picture, ...STICKER_SPOTS[0], h: 36 }] : [];
+function newSticker(src, h, existing) {
+  const spot = STICKER_SPOTS[existing.length % STICKER_SPOTS.length];
+  return { src, x: spot.x, y: spot.y, r: spot.r, h };
+}
+// draw stickers into a label (the deck's or a tape card's); onDrag makes them movable
+function renderStickers(layer, stickers, onDrag) {
+  layer.replaceChildren();
+  stickers.forEach(sticker => {
+    const img = document.createElement("img");
+    img.className = "sticker-img";
+    img.alt = "";
+    img.draggable = false;
+    img.src = sticker.src;
+    img.style.left = `${sticker.x}%`;
+    img.style.top = `${sticker.y}%`;
+    img.style.height = `${sticker.h}%`;
+    img.style.setProperty("--r", `${sticker.r}deg`);
+    if (onDrag) makeDraggable(img, layer, sticker, onDrag);
+    layer.append(img);
+  });
+}
+function makeDraggable(img, layer, sticker, onDone) {
+  img.classList.add("draggable");
+  img.addEventListener("pointerdown", event => {
+    event.preventDefault();
+    event.stopPropagation();
+    img.setPointerCapture(event.pointerId);
+    img.classList.add("dragging");
+    const box = layer.getBoundingClientRect();
+    const move = e => {
+      sticker.x = Math.min(97, Math.max(3, ((e.clientX - box.left) / box.width) * 100));
+      sticker.y = Math.min(95, Math.max(5, ((e.clientY - box.top) / box.height) * 100));
+      img.style.left = `${sticker.x}%`;
+      img.style.top = `${sticker.y}%`;
+    };
+    const up = () => {
+      img.classList.remove("dragging");
+      img.removeEventListener("pointermove", move);
+      img.removeEventListener("pointerup", up);
+      img.removeEventListener("pointercancel", up);
+      onDone();
+    };
+    img.addEventListener("pointermove", move);
+    img.addEventListener("pointerup", up);
+    img.addEventListener("pointercancel", up);
+  });
+}
+function applyStickers(stickers) {
+  currentStickers = (stickers || []).map(s => ({ ...s }));
+  renderStickers(labelStickers, currentStickers);
+  saveSettings({ stickers: currentStickers, picture: undefined });
+}
+
+// a word → a little pixel-text label sticker
+const TEXT_COLORS = { black: ["#161616", "#ffffff"], red: ["#d8352a", "#ffffff"], pink: ["#ff8fc8", "#4a1f38"], white: ["#ffffff", "#161616"] };
+async function makeTextSticker(text, color) {
+  const [bg, fg] = TEXT_COLORS[color] || TEXT_COLORS.black;
+  try { await document.fonts.load('8px "Press Start 2P"'); } catch { /* falls back to monospace */ }
+  const font = '8px "Press Start 2P", monospace';
+  const measure = document.createElement("canvas").getContext("2d");
+  measure.font = font;
+  const w = Math.ceil(measure.measureText(text).width) + 10, h = 16;
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#161616";
+  ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = bg;
+  ctx.fillRect(1, 1, w - 2, h - 2);
+  ctx.font = font;
+  ctx.fillStyle = fg;
+  ctx.textBaseline = "middle";
+  ctx.fillText(text, 5, h / 2 + 1);
+  return canvas.toDataURL("image/png");
+}
+
+// Any picture → a small pixel sticker: shrunk to 96px (so it looks pixel-y when drawn big),
+// and a plain white/light background is cut away so it looks like a die-cut sticker.
+async function makeSticker(file) {
+  const url = URL.createObjectURL(file);
+  try {
+    const img = new Image();
+    img.src = url;
+    await img.decode();
+    const MAX = 96;
+    const scale = Math.min(1, MAX / Math.max(img.naturalWidth, img.naturalHeight));
+    const w = Math.max(1, Math.round(img.naturalWidth * scale)), h = Math.max(1, Math.round(img.naturalHeight * scale));
+    const canvas = document.createElement("canvas");
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(img, 0, 0, w, h);
+    const data = ctx.getImageData(0, 0, w, h);
+    const px = data.data;
+    const light = i => px[i + 3] > 0 && px[i] > 228 && px[i + 1] > 228 && px[i + 2] > 228;
+    // only cut the background if the picture's edge is mostly light (a drawing on white paper)
+    let edge = 0, edgeLight = 0;
+    for (let x = 0; x < w; x++) for (const y of [0, h - 1]) { edge++; if (light((y * w + x) * 4)) edgeLight++; }
+    for (let y = 0; y < h; y++) for (const x of [0, w - 1]) { edge++; if (light((y * w + x) * 4)) edgeLight++; }
+    if (edgeLight / edge > 0.7) {
+      const stack = [];
+      const seen = new Uint8Array(w * h);
+      const push = (x, y) => { if (x >= 0 && y >= 0 && x < w && y < h && !seen[y * w + x]) { seen[y * w + x] = 1; stack.push(y * w + x); } };
+      for (let x = 0; x < w; x++) { push(x, 0); push(x, h - 1); }
+      for (let y = 0; y < h; y++) { push(0, y); push(w - 1, y); }
+      while (stack.length) {
+        const p = stack.pop(), i = p * 4;
+        if (!light(i)) continue;
+        px[i + 3] = 0;
+        const x = p % w, y = (p / w) | 0;
+        push(x + 1, y); push(x - 1, y); push(x, y + 1); push(x, y - 1);
+      }
+      ctx.putImageData(data, 0, 0);
+    }
+    return canvas.toDataURL("image/png");
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
 
 function mixtapeName() { return mixtapeInput.value.trim() || DEFAULT_MIXTAPE; }
 function applyMixtapeName() {
@@ -668,7 +803,7 @@ function finishRename(keep) {
   applyMixtapeName();
   saveSettings({ mixtapeName: mixtapeInput.value });
   updateMediaSession(playlist[currentTrackIndex] || { title: "", artist: "" });
-  if (keep && mixtapeInput.value !== before) showToast(`Renamed to "${mixtapeInput.value}" ♡`);
+  if (keep && mixtapeInput.value !== before) showToast(`Renamed to "${mixtapeInput.value}"`);
 }
 mixtapeInput.addEventListener("input", applyMixtapeName); // live preview on the cassette while typing
 mixtapeInput.addEventListener("keydown", event => {
@@ -733,7 +868,7 @@ addSongsInput.addEventListener("change", () => {
     buildOrder();
   }
   labelTrackNo.textContent = `TRACK ${pad2(currentTrackIndex + 1)}/${pad2(playlist.length)}`;
-  showToast(`Added ${files.length} song${files.length === 1 ? "" : "s"} to the tape ♡`);
+  showToast(`Added ${files.length} song${files.length === 1 ? "" : "s"} to the tape`);
 });
 
 /* ---------- dialog ---------- */
@@ -769,7 +904,7 @@ const savedFilter = $("savedFilter");
 let filterDesign = "all";
 
 // a little cassette for a saved tape (used on the shelf and as the preview in dialogs)
-function buildTapeCassette({ name, count, shell }) {
+function buildTapeCassette({ name, count, shell, stickers }) {
   const card = document.createElement("div");
   card.className = "tape-card";
   card.dataset.shell = designOf(shell);
@@ -780,15 +915,18 @@ function buildTapeCassette({ name, count, shell }) {
         <span class="tcx-name"></span>
         <span class="tcx-window" aria-hidden="true"><i></i><i></i></span>
         <span class="tcx-band"></span>
+        <span class="design-badge" aria-hidden="true">LNGSHOT</span>
+        <span class="tcx-stickers sticker-layer"></span>
       </span>
       <span class="tcx-bottom" aria-hidden="true"></span>
       <span class="sticker st-a" aria-hidden="true"></span>
     </button>`;
-  setTapeCassette(card, { name, count, shell });
+  setTapeCassette(card, { name, count, shell, stickers });
   return card;
 }
-function setTapeCassette(card, { name, count, shell }) {
+function setTapeCassette(card, { name, count, shell, stickers, onDrag }) {
   card.dataset.shell = designOf(shell);
+  renderStickers(card.querySelector(".tcx-stickers"), stickers || [], onDrag);
   card.querySelector(".tcx-name").textContent = name || "untitled";
   card.querySelector(".tcx-band").textContent = `${plural(count, "TRACK")} · ${DESIGN_NAMES[designOf(shell)].toUpperCase()}`;
   card.querySelector(".tape-card-open").setAttribute("aria-label", `${name} — ${plural(count, "track").toLowerCase()}, ${DESIGN_NAMES[designOf(shell)]} tape`);
@@ -853,12 +991,12 @@ function renderSavedTapes() {
   if (!savedTapes.length) {
     const empty = document.createElement("p");
     empty.className = "saved-empty";
-    empty.textContent = "No saved tapes yet. Press ♡ SAVE TAPE to keep the songs on your cassette as a playlist.";
+    empty.textContent = "No saved tapes yet. Press SAVE TAPE to keep the songs on your cassette as a playlist.";
     savedGrid.append(empty);
     return;
   }
   savedTapes.forEach(tape => {
-    const card = buildTapeCassette({ name: tape.name, count: tape.entries.length, shell: tape.shell });
+    const card = buildTapeCassette({ name: tape.name, count: tape.entries.length, shell: tape.shell, stickers: stickersOf(tape) });
     card.hidden = filterDesign !== "all" && designOf(tape.shell) !== filterDesign;
     card.querySelector(".tape-card-open").addEventListener("click", () => openTapeDialog(tape));
     const play = document.createElement("button");
@@ -874,10 +1012,11 @@ function renderSavedTapes() {
 }
 
 // the shared form of both dialogs: a tape preview, a name field and a design picker
-function buildTapeForm(body, { name, count, shell }) {
+function buildTapeForm(body, { name, count, shell, stickers }) {
+  let list = (stickers || []).map(s => ({ ...s }));
   const preview = document.createElement("div");
   preview.className = "modal-preview";
-  const cassette = buildTapeCassette({ name, count, shell });
+  const cassette = buildTapeCassette({ name, count, shell, stickers: list });
   cassette.querySelector(".tape-card-open").tabIndex = -1;
   preview.append(cassette);
 
@@ -894,46 +1033,178 @@ function buildTapeForm(body, { name, count, shell }) {
   designField.append("TAPE DESIGN");
   let design = designOf(shell);
   const refresh = () => {
-    setTapeCassette(cassette, { name: input.value.trim() || "untitled", count, shell: design });
+    setTapeCassette(cassette, { name: input.value.trim() || "untitled", count, shell: design, stickers: list, onDrag: () => {} });
     modal.firstElementChild.dataset.shell = design; // the dialog dresses up in the chosen design
   };
   const picker = buildDesignPicker(design, picked => { design = picked; refresh(); });
   designField.append(picker);
   input.addEventListener("input", refresh);
 
-  body.append(preview, field, designField);
-  return { input, getDesign: () => design, refresh };
+  // stickers: pictures and words, up to 6, dragged around on the preview above
+  const stickerField = document.createElement("div");
+  stickerField.className = "modal-field";
+  const stickerTitle = document.createElement("span");
+  const shelf = document.createElement("div");
+  shelf.className = "sticker-shelf";
+  const buttons = document.createElement("div");
+  buttons.className = "pic-row";
+  const fileInput = document.createElement("input");
+  fileInput.type = "file";
+  fileInput.accept = "image/*";
+  fileInput.multiple = true;
+  fileInput.hidden = true;
+  const addPic = document.createElement("button");
+  addPic.type = "button";
+  addPic.className = "pixel-button pixel-button-soft";
+  addPic.textContent = "+ PICTURE";
+  const addWord = document.createElement("button");
+  addWord.type = "button";
+  addWord.className = "pixel-button pixel-button-soft";
+  addWord.textContent = "+ WORDS";
+  buttons.append(addPic, addWord, fileInput);
+
+  // the little "type a word" form
+  const wordForm = document.createElement("div");
+  wordForm.className = "word-form";
+  wordForm.hidden = true;
+  const wordInput = document.createElement("input");
+  wordInput.maxLength = 14;
+  wordInput.placeholder = "type a word…";
+  wordInput.setAttribute("aria-label", "Sticker words");
+  let wordColor = "black";
+  const colors = document.createElement("div");
+  colors.className = "word-colors";
+  Object.keys(TEXT_COLORS).forEach(c => {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "word-color";
+    chip.style.background = TEXT_COLORS[c][0];
+    chip.title = c;
+    chip.setAttribute("aria-label", `${c} sticker`);
+    chip.setAttribute("aria-pressed", String(c === wordColor));
+    chip.addEventListener("click", () => {
+      wordColor = c;
+      colors.querySelectorAll(".word-color").forEach(b => b.setAttribute("aria-pressed", String(b === chip)));
+    });
+    colors.append(chip);
+  });
+  const wordAdd = document.createElement("button");
+  wordAdd.type = "button";
+  wordAdd.className = "pixel-button";
+  wordAdd.textContent = "STICK IT";
+  wordForm.append(wordInput, colors, wordAdd);
+
+  const hint = document.createElement("p");
+  hint.className = "pic-hint";
+  hint.textContent = "Drag the stickers on the tape above to move them · tap one below to peel it off. They stay on this device";
+
+  const full = () => {
+    if (list.length < MAX_STICKERS) return false;
+    showToast(`That's the max — ${MAX_STICKERS} stickers per tape`);
+    return true;
+  };
+  const showStickers = () => {
+    stickerTitle.textContent = `STICKERS (${list.length}/${MAX_STICKERS})`;
+    shelf.replaceChildren();
+    list.forEach(sticker => {
+      const item = document.createElement("button");
+      item.type = "button";
+      item.className = "sticker-thumb";
+      item.title = "Peel off this sticker";
+      item.setAttribute("aria-label", "Peel off this sticker");
+      const img = document.createElement("img");
+      img.src = sticker.src;
+      img.alt = "";
+      const x = document.createElement("span");
+      x.textContent = "✕";
+      item.append(img, x);
+      item.addEventListener("click", () => {
+        list = list.filter(s => s !== sticker);
+        showStickers();
+        showToast("Sticker peeled off");
+      });
+      shelf.append(item);
+    });
+    hint.hidden = !list.length;
+    refresh();
+  };
+  addPic.addEventListener("click", () => { if (!full()) fileInput.click(); });
+  fileInput.addEventListener("change", async () => {
+    const files = [...fileInput.files];
+    fileInput.value = "";
+    if (!files.length) return;
+    showToast("Making your sticker…");
+    let added = 0, failed = 0, capped = false;
+    for (const file of files) {
+      if (list.length >= MAX_STICKERS) { capped = true; break; }
+      try { list.push(newSticker(await makeSticker(file), 36, list)); added++; }
+      catch { failed++; }
+    }
+    showStickers();
+    if (added) preview.scrollIntoView({ block: "nearest", behavior: "smooth" }); // so you can drag it right away
+    if (capped) showToast(`Added ${added} — that's the max (${MAX_STICKERS} per tape)`);
+    else if (failed && !added) showToast("Couldn't read that picture — try a PNG or JPG");
+    else if (added === 1) showToast("Sticker added drag it where you like");
+    else if (added) showToast(`${added} stickers added drag them where you like`);
+  });
+  addWord.addEventListener("click", () => {
+    if (full()) return;
+    wordForm.hidden = !wordForm.hidden;
+    if (!wordForm.hidden) wordInput.focus();
+  });
+  const stickWord = async () => {
+    const text = wordInput.value.trim().toUpperCase();
+    if (!text) { wordInput.focus(); return; }
+    if (full()) return;
+    list.push(newSticker(await makeTextSticker(text, wordColor), 15, list));
+    wordInput.value = "";
+    wordForm.hidden = true;
+    showStickers();
+    preview.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    showToast(`"${text}" sticker added`);
+  };
+  wordAdd.addEventListener("click", stickWord);
+  wordInput.addEventListener("keydown", event => {
+    if (event.key === "Enter") { event.preventDefault(); event.stopPropagation(); stickWord(); }
+  });
+
+  stickerField.append(stickerTitle, shelf, buttons, wordForm, hint);
+  body.append(preview, field, designField, stickerField);
+  showStickers();
+  return { input, getDesign: () => design, getStickers: () => list.map(s => ({ ...s })), refresh };
 }
 
 function openSaveDialog() {
-  if (!playlist.length) { showToast("Add some songs first ♡"); return; }
+  if (!playlist.length) { showToast("Add some songs first"); return; }
   let form;
   const save = () => {
     const name = form.input.value.trim() || mixtapeName();
     const design = form.getDesign();
+    const stickers = form.getStickers();
     closeModal();
-    saveCurrentTape(name, design);
+    saveCurrentTape(name, design, stickers);
   };
   openModal("Save this tape?", body => {
     const text = document.createElement("p");
-    text.textContent = `Keep ${playlist.length === 1 ? "this song" : `these ${playlist.length} songs`} so you can play them again anytime ♡`;
+    text.textContent = `Keep ${playlist.length === 1 ? "this song" : `these ${playlist.length} songs`} so you can play them again anytime`;
     body.append(text);
-    form = buildTapeForm(body, { name: mixtapeName(), count: playlist.length, shell: document.body.dataset.shell });
+    form = buildTapeForm(body, { name: mixtapeName(), count: playlist.length, shell: document.body.dataset.shell, stickers: currentStickers });
     // preventDefault: otherwise the same Enter "clicks" the SAVE TAPE button that gets focus back
     form.input.addEventListener("keydown", event => { if (event.key === "Enter") { event.preventDefault(); save(); } });
   }, [
-    { label: "♡ SAVE", onClick: save },
+    { label: "SAVE", onClick: save },
     { label: "NOT NOW", soft: true, onClick: closeModal }
   ]);
   form.refresh();
 }
 
-async function saveCurrentTape(name, design) {
+async function saveCurrentTape(name, design, stickers = []) {
   const existing = savedTapes.find(t => t.name.toLowerCase() === name.toLowerCase());
   const tape = {
     id: existing?.id || newId(),
     name,
     shell: designOf(design),
+    stickers,
     entries: playlist.map(entryOf),
     created: existing?.created || Date.now(),
     updated: Date.now()
@@ -942,10 +1213,12 @@ async function saveCurrentTape(name, design) {
   mixtapeInput.value = name;
   applyMixtapeName();
   applyShell(tape.shell);                     // the whole page takes the tape's design
+  if (existing) delete existing.picture;
+  applyStickers(stickers);
   saveSettings({ mixtapeName: name, shell: tape.shell });
   try { await dbSaveTape(tape); } catch { warnStorage(); }
   renderSavedTapes();
-  showToast(existing ? `Updated "${name}" ♡` : `Saved "${name}" ♡`);
+  showToast(existing ? `Updated "${name}"` : `Saved "${name}"`);
 }
 
 function openTapeDialog(tape) {
@@ -956,15 +1229,25 @@ function openTapeDialog(tape) {
     const clash = savedTapes.find(t => t !== tape && t.name.toLowerCase() === name.toLowerCase());
     if (clash) { showToast(`There's already a tape called "${clash.name}"`); return; }
     tape.name = name;
+    const wasLoaded = tape.name === mixtapeName();
     tape.shell = form.getDesign();
+    tape.stickers = form.getStickers();
+    delete tape.picture;
     tape.updated = Date.now();
+    if (wasLoaded) {                           // this tape is in the deck: show the changes there too
+      mixtapeInput.value = name;
+      applyMixtapeName();
+      applyShell(tape.shell);
+      applyStickers(tape.stickers);
+      saveSettings({ mixtapeName: name, shell: tape.shell });
+    }
     closeModal();
     try { await dbSaveTape(tape); } catch { warnStorage(); }
     renderSavedTapes();
-    showToast(`Saved changes to "${name}" ♡`);
+    showToast(`Saved changes to "${name}"`);
   };
   openModal("Your tape", body => {
-    form = buildTapeForm(body, { name: tape.name, count: tape.entries.length, shell: tape.shell });
+    form = buildTapeForm(body, { name: tape.name, count: tape.entries.length, shell: tape.shell, stickers: stickersOf(tape) });
     form.input.addEventListener("keydown", event => { if (event.key === "Enter") { event.preventDefault(); saveChanges(); } });
     const heading = document.createElement("p");
     heading.className = "modal-meta";
@@ -988,7 +1271,7 @@ function openTapeDialog(tape) {
     });
     body.append(heading, list);
   }, [
-    { label: "▶ PLAY", onClick: () => { const design = form.getDesign(); closeModal(); playSavedTape({ ...tape, shell: design }); } },
+    { label: "▶ PLAY", onClick: () => { const design = form.getDesign(), stickers = form.getStickers(); closeModal(); playSavedTape({ ...tape, shell: design, stickers }); } },
     { label: "✓ SAVE CHANGES", soft: true, onClick: saveChanges },
     { label: "✕ DELETE", danger: true, onClick: event => {
         const button = event.currentTarget;
@@ -1014,6 +1297,7 @@ function playSavedTape(tape) {
   mixtapeInput.value = tape.name;
   applyMixtapeName();
   applyShell(tape.shell);                     // the whole page takes the tape's design
+  applyStickers(stickersOf(tape));
   saveSettings({ mixtapeName: tape.name, shell: designOf(tape.shell) });
   saveTape();
   buildOrder();
@@ -1021,7 +1305,7 @@ function playSavedTape(tape) {
   playlist.forEach(probeDuration);
   loadTrack(0);
   playTrack();
-  showToast(`Now playing "${tape.name}" ♡`);
+  showToast(`Now playing "${tape.name}"`);
 }
 
 async function deleteSavedTape(tape) {
@@ -1106,7 +1390,7 @@ if (desktopApp) {
     restore: () => setDesktopMini(false)
   };
   // a newer desktop version was published on GitHub
-  desktopApp.onUpdate?.(info => showToast(`✨ PIXELTAPE ${info.version} is out`, {
+  desktopApp.onUpdate?.(info => showToast(`PIXELTAPE ${info.version} is out`, {
     label: "GET IT",
     onClick: () => desktopApp.openExternal(info.url)
   }, { sticky: true }));
@@ -1151,7 +1435,7 @@ restoreButton.addEventListener("click", () => {
    Not available on phones or Safari — there, the lock-screen controls take over. */
 async function openFloatingPlayer() {
   if (!("documentPictureInPicture" in window)) {
-    showToast("Floating needs Chrome, Edge or Firefox on a computer. On phones, use your lock-screen controls ♡");
+    showToast("Floating needs Chrome, Edge or Firefox on a computer. On phones, use your lock-screen controls");
     return;
   }
   if (pipWindow) { pipWindow.focus(); return; }
@@ -1236,7 +1520,7 @@ function setupWebApp() {
     reloading = true;
     location.reload();
   });
-  const offerUpdate = worker => showToast("✨ A new PIXELTAPE update is ready", {
+  const offerUpdate = worker => showToast("A new PIXELTAPE update is ready", {
     label: "REFRESH",
     onClick: () => worker.postMessage("skip-waiting")
   }, { sticky: true });
@@ -1275,7 +1559,7 @@ window.addEventListener("beforeinstallprompt", event => {
 });
 window.addEventListener("appinstalled", () => {
   installPrompt = null;
-  showToast("PIXELTAPE is installed ♡ Find it with your other apps");
+  showToast("PIXELTAPE is installed Find it with your other apps");
 });
 
 function detectDevice() {
@@ -1324,7 +1608,7 @@ function openGetAppDialog() {
 
     // 1) install right here (phones, tablets, Chrome/Edge on computers) — free, no download page
     if (device === "ios") {
-      section("📱 On this iPhone / iPad", steps([
+      section("On this iPhone / iPad", steps([
         "Open this page in Safari",
         "Tap the Share button (□↑) at the bottom",
         "Tap “Add to Home Screen”, then “Add”"
@@ -1340,21 +1624,21 @@ function openGetAppDialog() {
         installPrompt = null;
         closeModal();
       });
-      section(device === "android" ? "📱 On this phone" : "💻 Quick install (no download)",
+      section(device === "android" ? "On this phone" : "Quick install (no download)",
         para("Adds PIXELTAPE to your apps with its own icon and window. Free, tiny, updates itself."), button);
     } else if (device === "android") {
-      section("📱 On this phone", steps([
+      section("On this phone", steps([
         "Open this page in Chrome",
         "Tap the ⋮ menu at the top right",
         "Tap “Install app” (or “Add to Home screen”)"
       ]));
     } else {
-      section("💻 Quick install (no download)", para("In Chrome or Edge, click the install icon (⊕) at the right end of the address bar. PIXELTAPE opens in its own window."));
+      section("Quick install (no download)", para("In Chrome or Edge, click the install icon (⊕) at the right end of the address bar. PIXELTAPE opens in its own window."));
     }
 
     // 2) the full desktop app — the one with the cassette floating over every app
     if (device === "mac" || device === "windows" || device === "other") {
-      const box = section("🖥 Desktop app — cassette floats over all your apps");
+      const box = section("Desktop app — cassette floats over all your apps");
       if (downloads) {
         const row = document.createElement("div");
         row.className = "getapp-downloads";
@@ -1364,7 +1648,7 @@ function openGetAppDialog() {
           ? "First time it opens, Windows may say “Windows protected your PC”: click More info → Run anyway."
           : "First time it opens, your Mac may block it: go to System Settings → Privacy & Security → Open Anyway."));
       } else {
-        box.append(para("Coming soon ♡"));
+        box.append(para("Coming soon"));
       }
     }
 
@@ -1384,6 +1668,7 @@ const settings = loadSettings();
 if (settings.mixtapeName) mixtapeInput.value = settings.mixtapeName;
 applyMixtapeName();
 applyShell(settings.shell);
+applyStickers(stickersOf(settings));
 setRepeat(REPEAT_MODES[settings.repeat] ? settings.repeat : "off");
 buildVu();
 scheduleFrame();

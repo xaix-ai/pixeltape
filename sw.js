@@ -1,5 +1,5 @@
 // PIXELTAPE service worker — makes the website installable, lets it open offline,
-// and powers the "✨ new update — REFRESH" message.
+// and powers the "new update — REFRESH" message.
 //
 // How updates reach people: every Netlify deploy stamps a new BUILD into this file
 // (see netlify.toml). The browser notices the file changed, downloads the new version

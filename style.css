@@ -14,15 +14,18 @@
   --shell-1:#ffc6e4; --shell-2:#ff9fd0; --shell-3:#d77caf; --shell-4:#b9679c; --shell-ink:#a74d87;
 }
 /* themes: shell colours + 3 stickers each (works on <body> and on each saved-tape card) */
-[data-shell="bubblegum"]{--shell-1:#ffc6e4;--shell-2:#ff9fd0;--shell-3:#d77caf;--shell-4:#b9679c;--shell-ink:#a74d87;--st1:"\2665";--st2:"\2661";--st3:"\273F";--st-ink:#ff6fae}
-[data-shell="peach"]{--shell-1:#ffe4d6;--shell-2:#ffc4a8;--shell-3:#ee9a7e;--shell-4:#c9735c;--shell-ink:#b0574a;--st1:"\273F";--st2:"\2740";--st3:"\2665";--st-ink:#ff8a65}
+[data-shell="bubblegum"]{--shell-1:#ffc6e4;--shell-2:#ff9fd0;--shell-3:#d77caf;--shell-4:#b9679c;--shell-ink:#a74d87;--st1:"\2605";--st2:"\266A";--st3:"\273F";--st-ink:#ff6fae}
+[data-shell="peach"]{--shell-1:#ffe4d6;--shell-2:#ffc4a8;--shell-3:#ee9a7e;--shell-4:#c9735c;--shell-ink:#b0574a;--st1:"\273F";--st2:"\2740";--st3:"\2605";--st-ink:#ff8a65}
 [data-shell="lemon"]{--shell-1:#fff7cf;--shell-2:#ffe792;--shell-3:#e3c255;--shell-4:#b8962e;--shell-ink:#8a6d14;--st1:"\2600\FE0E";--st2:"\2736";--st3:"\273F";--st-ink:#f2b705}
 [data-shell="mint"]{--shell-1:#dcf8ec;--shell-2:#a9e5cc;--shell-3:#6dbf9d;--shell-4:#4c9a7b;--shell-ink:#3f7e65;--st1:"\2663";--st2:"\273F";--st3:"\2740";--st-ink:#43b581}
 [data-shell="sky"]{--shell-1:#def0ff;--shell-2:#b7dcff;--shell-3:#82b6e6;--shell-4:#5a8fc2;--shell-ink:#3f6f9e;--st1:"\2601\FE0E";--st2:"\2727";--st3:"\266A";--st-ink:#5aa9e6}
 [data-shell="lavender"]{--shell-1:#ece2ff;--shell-2:#cbb4ff;--shell-3:#9b79d4;--shell-4:#7a5cb3;--shell-ink:#6c4fa3;--st1:"\2726";--st2:"\263E";--st3:"\2727";--st-ink:#9b6dd6}
-[data-shell="cherry"]{--shell-1:#ffe3e0;--shell-2:#ffbcb6;--shell-3:#e0726b;--shell-4:#b84d47;--shell-ink:#a3332e;--st1:"\2665";--st2:"\2740";--st3:"\273F";--st-ink:#e0403a}
+[data-shell="cherry"]{--shell-1:#ffe3e0;--shell-2:#ffbcb6;--shell-3:#e0726b;--shell-4:#b84d47;--shell-ink:#a3332e;--st1:"\2605";--st2:"\2740";--st3:"\273F";--st-ink:#e0403a}
 [data-shell="noir"]{--shell-1:#efe9e1;--shell-2:#d6cdc0;--shell-3:#8a8072;--shell-4:#5f574c;--shell-ink:#4a4339;--st1:"\2726";--st2:"\266A";--st3:"\2606";--st-ink:#e85d3c}
+[data-shell="ink"]{--shell-1:#f6f5f1;--shell-2:#e2e0da;--shell-3:#3a3a3a;--shell-4:#161616;--shell-ink:#1b1b1b;--st1:"\2715";--st2:"\270C\FE0E";--st3:"\2605";--st-ink:#d8352a}
 [data-shell="smoke"]{--shell-1:rgba(244,238,244,.92);--shell-2:rgba(205,192,209,.9);--shell-3:#9a8aa0;--shell-4:#76667c;--shell-ink:#5f5066;--st1:"\263E";--st2:"\2727";--st3:"\2601\FE0E";--st-ink:#8c7f93}
+
+
 
 
 
@@ -46,6 +49,7 @@ body[data-shell="lemon"]{--t-3e2636:#3c3628;--t-5a3b52:#584e3d;--t-5d3a4c:#5a563
 body[data-shell="sky"]{--t-3e2636:#28343c;--t-5a3b52:#3e4f57;--t-5d3a4c:#3d4a5a;--t-6e4559:#49576a;--t-76516e:#556a72;--t-9f5d8c:#648798;--t-a160-80-130-_16:rgba(88,125,152,.16);--t-a181-100-153-_1:rgba(108,147,173,.1);--t-a198-127-169-_22:rgba(134,165,191,.22);--t-a210-110-110-_45:rgba(124,120,200,.45);--t-a236-170-180-_8:rgba(177,182,229,.8);--t-a255-214-236-_6:rgba(218,234,251,.6);--t-a255-214-236-_75:rgba(218,234,251,.75);--t-a255-232-236-_8:rgba(234,237,253,.8);--t-a40-30-30-_4:rgba(31,31,39,.4);--t-a62-38-54-_25:rgba(40,52,60,.25);--t-a62-38-54-_35:rgba(40,52,60,.35);--t-a66e95:#7491a0;--t-a74d87:#56819e;--t-a9568a:#5e85a1;--t-a979d8:#82cead;--t-ad5c91:#648ba5;--t-ad87a5:#8ba1a9;--t-b66b9d:#7298af;--t-bd79a6:#80a1b6;--t-bd8aab:#8fa7b8;--t-c06ca0:#749bb8;--t-c18bb0:#90acbc;--t-c38ab0:#90acbd;--t-c47aa7:#81a2bd;--t-c55c9b:#6695ba;--t-c76ba3:#749dbe;--t-c79ab8:#9eb5c2;--t-c98bb3:#91afc3;--t-d18bb7:#92b2ca;--t-d23c96:#4b8dc3;--t-d2a9c3:#adc0ce;--t-d9a3c4:#a8c1d4;--t-df79b5:#83afd5;--t-df91bf:#99bad7;--t-e0457f:#547dd0;--t-e06a8f:#768fd4;--t-e2a7c9:#adc6dc;--t-e3b2d1:#b7cede;--t-e45ca7:#6aa0d6;--t-e4a0ca:#a7c6dd;--t-e5a0ca:#a7c6de;--t-e77bb7:#86b1dc;--t-e8b1d3:#b6d0e3;--t-efcfe0:#d2dfec;--t-f08cc5:#96c0e6;--t-f0c6dd:#cadbec;--t-f5cde5:#d1e3f1;--t-f6d6e7:#d9e6f3;--t-f6d9ea:#dce8f3;--t-ff4fa3:#619ded;--t-ff5f8f:#6f8fef;--t-ff8fb3:#9ab3f4;--t-ff8fc8:#9ac3f4;--t-ff9fd0:#a9ccf5;--t-ffd2ea:#d6e8fb;--t-ffd5ec:#d9eafb;--t-ffd6ec:#daeafb;--t-ffe3f1:#e6f0fc;--t-ffe6f4:#e8f3fc;--t-ffe8f5:#eaf4fd;--t-fff1f8:#f2f7fe;--t-fff1f9:#f2f8fe;--t-fff4fb:#f5fafe;--t-fff5fb:#f6fafe;}
 body[data-shell="cherry"]{--t-3e2636:#3e2629;--t-5a3b52:#5a3b41;--t-5d3a4c:#5d3b3a;--t-6e4559:#6e4745;--t-76516e:#76515a;--t-9f5d8c:#9f5d69;--t-a160-80-130-_16:rgba(160,80,87,.16);--t-a181-100-153-_1:rgba(181,100,110,.1);--t-a198-127-169-_22:rgba(198,127,131,.22);--t-a210-110-110-_45:rgba(210,163,110,.45);--t-a236-170-180-_8:rgba(236,195,170,.8);--t-a255-214-236-_6:rgba(255,214,214,.6);--t-a255-214-236-_75:rgba(255,214,214,.75);--t-a255-232-236-_8:rgba(255,240,232,.8);--t-a40-30-30-_4:rgba(40,35,30,.4);--t-a62-38-54-_25:rgba(62,38,41,.25);--t-a62-38-54-_35:rgba(62,38,41,.35);--t-a66e95:#a66e77;--t-a74d87:#a74d57;--t-a9568a:#a9565e;--t-a979d8:#d879d4;--t-ad5c91:#ad5c66;--t-ad87a5:#ad8791;--t-b66b9d:#b66b75;--t-bd79a6:#bd7982;--t-bd8aab:#bd8a90;--t-c06ca0:#c06c73;--t-c18bb0:#c18b93;--t-c38ab0:#c38a92;--t-c47aa7:#c47a80;--t-c55c9b:#c55c63;--t-c76ba3:#c76b72;--t-c79ab8:#c79aa0;--t-c98bb3:#c98b92;--t-d18bb7:#d18b92;--t-d23c96:#d23c46;--t-d2a9c3:#d2a9ad;--t-d9a3c4:#d9a3a7;--t-df79b5:#df797f;--t-df91bf:#df9195;--t-e0457f:#e05e45;--t-e06a8f:#e0846a;--t-e2a7c9:#e2a7aa;--t-e3b2d1:#e3b2b7;--t-e45ca7:#e45c5e;--t-e4a0ca:#e4a0a6;--t-e5a0ca:#e5a0a5;--t-e77bb7:#e77b7d;--t-e8b1d3:#e8b1b6;--t-efcfe0:#efcfcf;--t-f08cc5:#f08c90;--t-f0c6dd:#f0c6c7;--t-f5cde5:#f5cdd0;--t-f6d6e7:#f6d6d6;--t-f6d9ea:#f6d9db;--t-ff4fa3:#ff594f;--t-ff5f8f:#ff845f;--t-ff8fb3:#ffa78f;--t-ff8fc8:#ff928f;--t-ff9fd0:#ffa19f;--t-ffd2ea:#ffd2d2;--t-ffd5ec:#ffd5d6;--t-ffd6ec:#ffd6d6;--t-ffe3f1:#ffe4e3;--t-ffe6f4:#ffe6e7;--t-ffe8f5:#ffe8e9;--t-fff1f8:#fff1f1;--t-fff1f9:#fff1f2;--t-fff4fb:#fff4f5;--t-fff5fb:#fff5f6;}
 body[data-shell="noir"]{--t-3e2636:#333132;--t-5a3b52:#4c494b;--t-5d3a4c:#4e494c;--t-6e4559:#5c5759;--t-76516e:#666165;--t-9f5d8c:#827a80;--t-a160-80-130-_16:rgba(125,115,121,.16);--t-a181-100-153-_1:rgba(145,136,142,.1);--t-a198-127-169-_22:rgba(167,158,163,.22);--t-a210-110-110-_45:rgba(166,154,154,.45);--t-a236-170-180-_8:rgba(207,199,200,.8);--t-a255-214-236-_6:rgba(237,232,235,.6);--t-a255-214-236-_75:rgba(237,232,235,.75);--t-a255-232-236-_8:rgba(245,242,243,.8);--t-a40-30-30-_4:rgba(36,34,34,.4);--t-a62-38-54-_25:rgba(51,49,50,.25);--t-a62-38-54-_35:rgba(51,49,50,.35);--t-a66e95:#8d878b;--t-a74d87:#7f757c;--t-a9568a:#847b81;--t-a979d8:#a9a3ae;--t-ad5c91:#898086;--t-ad87a5:#9c989b;--t-b66b9d:#958c92;--t-bd79a6:#9f979c;--t-bd8aab:#a7a0a4;--t-c06ca0:#9b9197;--t-c18bb0:#a9a3a7;--t-c38ab0:#aaa3a8;--t-c47aa7:#a39ba0;--t-c55c9b:#978a92;--t-c76ba3:#9f939a;--t-c79ab8:#b3aeb1;--t-c98bb3:#aea6ab;--t-d18bb7:#b2aaaf;--t-d23c96:#907e89;--t-d2a9c3:#c0bbbe;--t-d9a3c4:#c1bbbf;--t-df79b5:#b2a6ad;--t-df91bf:#bdb3b9;--t-e0457f:#9c8990;--t-e06a8f:#ac9ea2;--t-e2a7c9:#c8c1c5;--t-e3b2d1:#cdc8cb;--t-e45ca7:#a898a1;--t-e4a0ca:#c6bec3;--t-e5a0ca:#c7bec3;--t-e77bb7:#b7abb2;--t-e8b1d3:#d0c9cd;--t-efcfe0:#e1dddf;--t-f08cc5:#c4b8bf;--t-f0c6dd:#ded8db;--t-f5cde5:#e3dfe1;--t-f6d6e7:#e8e4e6;--t-f6d9ea:#e9e6e8;--t-ff4fa3:#b29ca7;--t-ff5f8f:#b9a5ab;--t-ff8fb3:#cec0c5;--t-ff8fc8:#cec0c7;--t-ff9fd0:#d5c9cf;--t-ffd2ea:#ebe6e9;--t-ffd5ec:#ede7ea;--t-ffd6ec:#ede8eb;--t-ffe3f1:#f3eff1;--t-ffe6f4:#f4f1f3;--t-ffe8f5:#f5f2f4;--t-fff1f8:#f9f7f8;--t-fff1f9:#f9f7f8;--t-fff4fb:#faf9fa;--t-fff5fb:#fbf9fa;}
+body[data-shell="ink"]{--t-3e2636:#323232;--t-5a3b52:#4a4a4a;--t-5d3a4c:#4c4c4c;--t-6e4559:#5a5a5a;--t-76516e:#646464;--t-9f5d8c:#7e7e7e;--t-a160-80-130-_16:rgba(120,120,120,.16);--t-a181-100-153-_1:rgba(140,140,140,.1);--t-a198-127-169-_22:rgba(162,162,162,.22);--t-a210-110-110-_45:rgba(160,160,160,.45);--t-a236-170-180-_8:rgba(203,203,203,.8);--t-a255-214-236-_6:rgba(235,235,235,.6);--t-a255-214-236-_75:rgba(235,235,235,.75);--t-a255-232-236-_8:rgba(243,243,243,.8);--t-a40-30-30-_4:rgba(35,35,35,.4);--t-a62-38-54-_25:rgba(50,50,50,.25);--t-a62-38-54-_35:rgba(50,50,50,.35);--t-a66e95:#8a8a8a;--t-a74d87:#7a7a7a;--t-a9568a:#808080;--t-a979d8:#a8a8a8;--t-ad5c91:#848484;--t-ad87a5:#9a9a9a;--t-b66b9d:#909090;--t-bd79a6:#9b9b9b;--t-bd8aab:#a3a3a3;--t-c06ca0:#969696;--t-c18bb0:#a6a6a6;--t-c38ab0:#a6a6a6;--t-c47aa7:#9f9f9f;--t-c55c9b:#909090;--t-c76ba3:#999999;--t-c79ab8:#b0b0b0;--t-c98bb3:#aaaaaa;--t-d18bb7:#aeaeae;--t-d23c96:#878787;--t-d2a9c3:#bebebe;--t-d9a3c4:#bebebe;--t-df79b5:#acacac;--t-df91bf:#b8b8b8;--t-e0457f:#929292;--t-e06a8f:#a5a5a5;--t-e2a7c9:#c4c4c4;--t-e3b2d1:#cacaca;--t-e45ca7:#a0a0a0;--t-e4a0ca:#c2c2c2;--t-e5a0ca:#c2c2c2;--t-e77bb7:#b1b1b1;--t-e8b1d3:#cccccc;--t-efcfe0:#dfdfdf;--t-f08cc5:#bebebe;--t-f0c6dd:#dbdbdb;--t-f5cde5:#e1e1e1;--t-f6d6e7:#e6e6e6;--t-f6d9ea:#e8e8e8;--t-ff4fa3:#a7a7a7;--t-ff5f8f:#afafaf;--t-ff8fb3:#c7c7c7;--t-ff8fc8:#c7c7c7;--t-ff9fd0:#cfcfcf;--t-ffd2ea:#e8e8e8;--t-ffd5ec:#eaeaea;--t-ffd6ec:#ebebeb;--t-ffe3f1:#f1f1f1;--t-ffe6f4:#f2f2f2;--t-ffe8f5:#f3f3f3;--t-fff1f8:#f8f8f8;--t-fff1f9:#f8f8f8;--t-fff4fb:#fafafa;--t-fff5fb:#fafafa;}
 /* END THEME COLOURS */
 
 body{
@@ -167,6 +171,7 @@ button:focus-visible,input:focus-visible,label:focus-within{outline:3px solid va
 [data-shell="lavender"]{--cs-bg:linear-gradient(150deg,#c3b0ec,#a993de 60%,#8f78cc);--cs-edge:#7158b4;--cs-shadow:#584296;--cs-bottom:#9c86d6;--cs-ink:#3e2c74;--cs-btn:#ffe36e;--lb-bg:#ffe36e;--lb-line:rgba(113,88,180,.25);--lb-ink:#4d3794;--band:linear-gradient(#7158b4,#634ca5);--band-ink:#ffe36e;--win:linear-gradient(#f3e7b0,#e3d38e);--design:"GRAPE"}
 [data-shell="smoke"]{--cs-bg:linear-gradient(150deg,rgba(255,255,255,.82),rgba(225,228,234,.78) 60%,rgba(200,205,214,.82));--cs-edge:#a7adb7;--cs-shadow:#8a909a;--cs-bottom:rgba(190,196,206,.8);--cs-ink:#555b66;--cs-btn:#555b66;--lb-bg:#fdfdfb;--lb-line:rgba(0,0,0,.1);--lb-ink:#3d4250;--band:linear-gradient(#cfd4dc,#bfc5cf);--band-ink:#3d4250;--win:linear-gradient(#eef0f3,#d8dce2);--design:"CRYSTAL"}
 [data-shell="noir"]{--cs-bg:linear-gradient(150deg,#3c3a37,#2c2b29 60%,#1f1e1d);--cs-edge:#111111;--cs-shadow:#000000;--cs-bottom:#2a2927;--cs-ink:#d9d2c4;--cs-btn:#f4ead6;--lb-bg:#f4ead6;--lb-line:rgba(0,0,0,.14);--lb-ink:#2b2a28;--band:linear-gradient(#e85d3c 0 33%,#f2b134 33% 66%,#3fa7b5 66%);--band-ink:#fff;--win:linear-gradient(#e9dfcb,#d4c8b0);--design:"NOIR"}
+[data-shell="ink"]{--cs-bg:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Cpath d='M3 3l4 4M7 3l-4 4' stroke='%23000' stroke-opacity='.1' stroke-width='1.2'/%3E%3C/svg%3E") 0 0/10px 10px,linear-gradient(150deg,#ffffff,#f3f2ee 60%,#e6e4de);--cs-edge:#161616;--cs-shadow:#161616;--cs-bottom:#e9e7e1;--cs-ink:#161616;--cs-btn:#d8352a;--lb-bg:#ffffff;--lb-line:rgba(0,0,0,.09);--lb-ink:#161616;--band:linear-gradient(#d8352a,#c22d23);--band-ink:#fff;--win:linear-gradient(#f4f3ef,#dddbd5);--design:"LNGSHOT"}
 
 .cassette{
   position:relative; width:100%; aspect-ratio:1.6/1; container-type:inline-size;
@@ -445,10 +450,11 @@ button:focus-visible,input:focus-visible,label:focus-within{outline:3px solid va
 
 /* dialog extras: tape preview + design picker */
 .modal-preview{display:flex;justify-content:center;margin:0 0 6px}
-.modal-preview .tape-card{width:190px}
+.modal-preview .tape-card{width:min(270px,100%)}
+@media (max-height:720px){.modal-preview .tape-card{width:210px}}
 .modal-preview .tape-card-open{cursor:default}
 .modal-preview .tape-card-open:hover{transform:none}
-.modal-preview .tcx-name{font-size:26px}
+.modal-preview .tcx-name{font-size:30px}
 .design-picker{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
 .design-picker .swatch{position:relative}
 .design-picker .swatch span{position:absolute;left:50%;top:calc(100% + 4px);transform:translateX(-50%);font-size:13px;color:var(--text-light);white-space:nowrap}
@@ -547,7 +553,7 @@ button:focus-visible,input:focus-visible,label:focus-within{outline:3px solid va
 
 /* ============ TOAST ============ */
 .toast{
-  position:fixed; left:50%; bottom:24px; z-index:1100; max-width:min(92vw,520px);
+  position:fixed; left:50%; bottom:24px; z-index:1300; max-width:min(92vw,520px);
   transform:translate(-50%,160%); visibility:hidden; transition:transform .25s steps(4),visibility 0s .25s;
   background:var(--screen); color:var(--t-ffe6f4); border:3px solid var(--screen-edge); box-shadow:4px 4px 0 var(--t-a62-38-54-_25);
   padding:10px 16px; font-size:20px; text-align:center;
@@ -633,10 +639,10 @@ button:focus-visible,input:focus-visible,label:focus-within{outline:3px solid va
 .loader-stage{position:relative;width:128px;height:150px}
 .loader-logo{position:absolute;left:0;top:20px;width:128px;height:auto;image-rendering:pixelated;animation:loader-bounce .9s cubic-bezier(.3,0,.4,1) infinite;transform-origin:50% 100%}
 .loader-shadow{position:absolute;left:24px;bottom:0;width:80px;height:10px;border-radius:50%;background:rgb(62,38,54);opacity:.18;animation:loader-shadow .9s cubic-bezier(.3,0,.4,1) infinite}
-.loader-name{font-family:"Press Start 2P",monospace;font-size:18px;letter-spacing:3px;color:var(--shell-ink,#76516e)}
-.loader-bar{width:180px;height:12px;border:3px solid var(--shell-ink,#76516e);background:var(--cream);padding:2px}
-.loader-bar span{display:block;height:100%;width:0;background:repeating-linear-gradient(90deg,var(--shell-3,#ff8fc8) 0 8px,transparent 8px 10px);animation:loader-fill 1.3s steps(9) forwards}
-.loader-text{font-family:"VT323",monospace;font-size:20px;color:var(--shell-ink,#76516e);opacity:.8}
+.loader-name{font-family:"Press Start 2P",monospace;font-size:18px;letter-spacing:3px;color:var(--shell-ink,var(--t-76516e))}
+.loader-bar{width:180px;height:12px;border:3px solid var(--shell-ink,var(--t-76516e));background:var(--cream);padding:2px}
+.loader-bar span{display:block;height:100%;width:0;background:repeating-linear-gradient(90deg,var(--shell-3,var(--t-ff8fc8)) 0 8px,transparent 8px 10px);animation:loader-fill 1.3s steps(9) forwards}
+.loader-text{font-family:"VT323",monospace;font-size:20px;color:var(--shell-ink,var(--t-76516e));opacity:.8}
 @keyframes loader-bounce{
   0%,100%{transform:translateY(0) scale(1.08,.92)}
   15%{transform:translateY(-4px) scale(.96,1.04)}
@@ -645,3 +651,50 @@ button:focus-visible,input:focus-visible,label:focus-within{outline:3px solid va
 @keyframes loader-shadow{0%,100%{transform:scaleX(1);opacity:.2}50%{transform:scaleX(.6);opacity:.08}}
 @keyframes loader-fill{to{width:100%}}
 @media (prefers-reduced-motion:reduce){.loader-logo,.loader-shadow{animation:none}}
+
+/* ---------- INK design: sketchbook grid paper, black lines, one red accent ---------- */
+body[data-shell="ink"]{
+  background-color:rgb(250,250,247);
+  background-image:linear-gradient(rgb(0 0 0/.055) 1px,transparent 1px),linear-gradient(90deg,rgb(0 0 0/.055) 1px,transparent 1px);
+  background-size:18px 18px; background-position:0 0;
+}
+body[data-shell="ink"] .cassette-label,.tape-card[data-shell="ink"] .tcx-label{
+  background-image:linear-gradient(rgb(0 0 0/.07) 1px,transparent 1px),linear-gradient(90deg,rgb(0 0 0/.07) 1px,transparent 1px);
+  background-size:7px 7px; background-position:0 0; background-repeat:repeat;
+}
+
+/* ---------- stickers on tapes (pictures + words, draggable in the tape dialog) ---------- */
+.sticker-layer{position:absolute;inset:0;z-index:3;pointer-events:none}
+.sticker-img{
+  position:absolute; width:auto; max-width:40%; image-rendering:pixelated; transform:translate(-50%,-50%) rotate(var(--r,0deg));
+  filter:drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff) drop-shadow(1px 2px 0 rgb(0 0 0/.28));
+}
+.sticker-img.draggable{pointer-events:auto;cursor:grab;touch-action:none}
+.sticker-img.dragging{cursor:grabbing;transform:translate(-50%,-50%) rotate(var(--r,0deg)) scale(1.15)}
+.sticker-shelf{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.sticker-shelf:empty{display:none}
+.sticker-thumb{position:relative;width:46px;height:46px;padding:3px;border:2px dashed currentColor;border-radius:4px;background:repeating-conic-gradient(rgb(0 0 0/.06) 0 25%,transparent 0 50%) 0 0/10px 10px;cursor:pointer;color:inherit}
+.sticker-thumb img{width:100%;height:100%;object-fit:contain;image-rendering:pixelated}
+.sticker-thumb span{position:absolute;top:-8px;right:-8px;width:18px;height:18px;display:grid;place-items:center;font-size:12px;line-height:1;background:rgb(22 22 22);color:#fff;border-radius:50%}
+.pic-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px}
+.pic-row .pixel-button,.word-form .pixel-button{font-size:15px;padding:6px 10px}
+.word-form{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px}
+.word-form[hidden]{display:none}
+.word-form input{flex:1 1 140px;min-width:0}
+.word-colors{display:flex;gap:6px}
+.word-color{width:24px;height:24px;border:2px solid rgb(22 22 22);border-radius:4px;cursor:pointer;padding:0}
+.word-color[aria-pressed="true"]{outline:3px solid currentColor;outline-offset:2px}
+.pic-hint{margin-top:6px;font-size:15px;opacity:.75}
+.pic-hint[hidden]{display:none}
+
+/* the 10th design always carries a fixed LNGSHOT label across the middle of the tape (not a sticker: it can't be moved) */
+.design-badge{display:none}
+body[data-shell="ink"] .cassette-label .design-badge,.tape-card[data-shell="ink"] .design-badge{
+  display:block; position:absolute; left:50%; z-index:2; pointer-events:none; white-space:nowrap;
+  transform:translate(-50%,-50%) rotate(-3deg);
+  background:rgb(216 53 42); color:#fff; border:2px solid rgb(22 22 22); box-shadow:2px 2px 0 rgb(22 22 22);
+  font-family:"Press Start 2P",monospace; letter-spacing:.12em; line-height:1;
+}
+body[data-shell="ink"] .cassette-label .design-badge{top:67%;font-size:clamp(7px,3.4cqw,15px);padding:.45em .6em .4em}
+.tape-card[data-shell="ink"] .design-badge{top:58%;font-size:7px;padding:3px 4px 2px;border-width:1.5px;box-shadow:1px 1px 0 rgb(22 22 22)}
+.modal-preview .tape-card[data-shell="ink"] .design-badge{font-size:10px}
